@@ -6,20 +6,20 @@ import "time"
 import "sync"
 import "fmt"
 
+
 type Clerk struct {
-  mu sync.Mutex // one RPC at a time
-  sm *shardmaster.Clerk
-  config shardmaster.Config
-  // You'll have to modify Clerk.
+	mu     sync.Mutex // one RPC at a time
+	sm     *shardmaster.Clerk
+	config shardmaster.Config
+	// You'll have to modify Clerk.
 }
 
 
-
 func MakeClerk(shardmasters []string) *Clerk {
-  ck := new(Clerk)
-  ck.sm = shardmaster.MakeClerk(shardmasters)
-  // You'll have to modify MakeClerk.
-  return ck
+	ck := new(Clerk)
+	ck.sm = shardmaster.MakeClerk(shardmasters)
+	// You'll have to modify MakeClerk.
+	return ck
 }
 
 //
@@ -39,20 +39,20 @@ func MakeClerk(shardmasters []string) *Clerk {
 // please don't change this function.
 //
 func call(srv string, rpcname string,
-          args interface{}, reply interface{}) bool {
-  c, errx := rpc.Dial("unix", srv)
-  if errx != nil {
-    return false
-  }
-  defer c.Close()
-    
-  err := c.Call(rpcname, args, reply)
-  if err == nil {
-    return true
-  }
+	args interface{}, reply interface{}) bool {
+	c, errx := rpc.Dial("unix", srv)
+	if errx != nil {
+		return false
+	}
+	defer c.Close()
 
-  fmt.Println(err)
-  return false
+	err := c.Call(rpcname, args, reply)
+	if err == nil {
+		return true
+	}
+
+	fmt.Println(err)
+	return false
 }
 
 //
@@ -61,12 +61,12 @@ func call(srv string, rpcname string,
 // and please do not change it.
 //
 func key2shard(key string) int {
-  shard := 0
-  if len(key) > 0 {
-    shard = int(key[0])
-  }
-  shard %= shardmaster.NShards
-  return shard
+	shard := 0
+	if len(key) > 0 {
+		shard = int(key[0])
+	}
+	shard %= shardmaster.NShards
+	return shard
 }
 
 //
@@ -75,84 +75,84 @@ func key2shard(key string) int {
 // keeps trying forever in the face of all other errors.
 //
 func (ck *Clerk) Get(key string) string {
-  ck.mu.Lock()
-  defer ck.mu.Unlock()
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
 
-  // You'll have to modify Get().
+	// You'll have to modify Get().
 
-  for {
-    shard := key2shard(key)
+	for {
+		shard := key2shard(key)
 
-    gid := ck.config.Shards[shard]
+		gid := ck.config.Shards[shard]
 
-    servers, ok := ck.config.Groups[gid]
+		servers, ok := ck.config.Groups[gid]
 
-    if ok {
-      // try each server in the shard's replication group.
-      for _, srv := range servers {
-        args := &GetArgs{}
-        args.Key = key
-        var reply GetReply
-        ok := call(srv, "ShardKV.Get", args, &reply)
-        if ok && (reply.Err == OK || reply.Err == ErrNoKey) {
-          return reply.Value
-        }
-        if ok && (reply.Err == ErrWrongGroup) {
-          break
-        }
-      }
-    }
+		if ok {
+			// try each server in the shard's replication group.
+			for _, srv := range servers {
+				args := &GetArgs{}
+				args.Key = key
+				var reply GetReply
+				ok := call(srv, "ShardKV.Get", args, &reply)
+				if ok && (reply.Err == OK || reply.Err == ErrNoKey) {
+					return reply.Value
+				}
+				if ok && (reply.Err == ErrWrongGroup) {
+					break
+				}
+			}
+		}
 
-    time.Sleep(100 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 
-    // ask master for a new configuration.
-    ck.config = ck.sm.Query(-1)
-  }
-  return ""
+		// ask master for a new configuration.
+		ck.config = ck.sm.Query(-1)
+	}
+	return ""
 }
 
 func (ck *Clerk) PutExt(key string, value string, dohash bool) string {
-  ck.mu.Lock()
-  defer ck.mu.Unlock()
+	ck.mu.Lock()
+	defer ck.mu.Unlock()
 
-  // You'll have to modify Put().
+	// You'll have to modify Put().
 
-  for {
-    shard := key2shard(key)
+	for {
+		shard := key2shard(key)
 
-    gid := ck.config.Shards[shard]
+		gid := ck.config.Shards[shard]
 
-    servers, ok := ck.config.Groups[gid]
+		servers, ok := ck.config.Groups[gid]
 
-    if ok {
-      // try each server in the shard's replication group.
-      for _, srv := range servers {
-        args := &PutArgs{}
-        args.Key = key
-        args.Value = value
-        args.DoHash = dohash
-        var reply PutReply
-        ok := call(srv, "ShardKV.Put", args, &reply)
-        if ok && reply.Err == OK {
-          return reply.PreviousValue
-        }
-        if ok && (reply.Err == ErrWrongGroup) {
-          break
-        }
-      }
-    }
+		if ok {
+			// try each server in the shard's replication group.
+			for _, srv := range servers {
+				args := &PutArgs{}
+				args.Key = key
+				args.Value = value
+				args.DoHash = dohash
+				var reply PutReply
+				ok := call(srv, "ShardKV.Put", args, &reply)
+				if ok && reply.Err == OK {
+					return reply.PreviousValue
+				}
+				if ok && (reply.Err == ErrWrongGroup) {
+					break
+				}
+			}
+		}
 
-    time.Sleep(100 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 
-    // ask master for a new configuration.
-    ck.config = ck.sm.Query(-1)
-  }
+		// ask master for a new configuration.
+		ck.config = ck.sm.Query(-1)
+	}
 }
 
 func (ck *Clerk) Put(key string, value string) {
-  ck.PutExt(key, value, false)
+	ck.PutExt(key, value, false)
 }
 func (ck *Clerk) PutHash(key string, value string) string {
-  v := ck.PutExt(key, value, true)
-  return v
+	v := ck.PutExt(key, value, true)
+	return v
 }
