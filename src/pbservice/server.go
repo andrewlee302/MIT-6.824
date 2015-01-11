@@ -51,8 +51,8 @@ func (pb *PBServer) DoPut(key string, val string, puttype int) string {
 	case PutUpdate:
 		pb.data[key] = val
 	case PutHash:
-		h := hash(pb.data[key] + val)
-		pb.data[key] = strconv.Itoa(int(h))
+		h := shash(pb.data[key] + val)
+		pb.data[key] = h
 	case PutAppend:
 		pb.data[key] = pb.data[key] + ";" + val
 	}

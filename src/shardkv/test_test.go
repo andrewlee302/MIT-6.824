@@ -22,8 +22,8 @@ func port(tag string, host int) string {
 }
 
 func NextValue(hprev string, val string) string {
-	h := hash(hprev + val)
-	return strconv.Itoa(int(h))
+	h := shash(hprev + val)
+	return h
 }
 
 func mcleanup(sma []*shardmaster.ShardMaster) {

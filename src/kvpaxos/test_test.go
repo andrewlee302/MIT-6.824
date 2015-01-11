@@ -35,8 +35,7 @@ func cleanup(kva []*KVPaxos) {
 }
 
 func NextValue(hprev string, val string) string {
-	h := hash(hprev + val)
-	return strconv.Itoa(int(h))
+	return shash(hprev + val)
 }
 
 func TestBasic(t *testing.T) {

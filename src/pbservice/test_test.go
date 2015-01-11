@@ -180,8 +180,8 @@ func TestAtMostOnce(t *testing.T) {
 		if pv != val {
 			t.Fatalf("ck.Puthash() returned %v but expected %v\n", pv, val)
 		}
-		h := hash(val + v)
-		val = strconv.Itoa(int(h))
+		h := shash(val + v)
+		val = h
 	}
 
 	v := ck.Get(k)

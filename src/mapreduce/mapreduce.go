@@ -182,7 +182,7 @@ func ReduceName(fileName string, MapJob int, ReduceJob int) string {
 	return MapName(fileName, MapJob) + "-" + strconv.Itoa(ReduceJob)
 }
 
-func hash(s string) uint32 {
+func ihash(s string) uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(s))
 	return h.Sum32()
@@ -219,7 +219,7 @@ func DoMap(JobNumber int, fileName string,
 		enc := json.NewEncoder(file)
 		for e := res.Front(); e != nil; e = e.Next() {
 			kv := e.Value.(KeyValue)
-			if hash(kv.Key)%uint32(nreduce) == uint32(r) {
+			if ihash(kv.Key)%uint32(nreduce) == uint32(r) {
 				err := enc.Encode(&kv)
 				if err != nil {
 					log.Fatal("DoMap: marshall ", err)

@@ -1,6 +1,7 @@
 package kvpaxos
 
 import "hash/fnv"
+import "strconv"
 
 const (
 	OK       = "OK"
@@ -34,8 +35,9 @@ type GetReply struct {
 	Value string
 }
 
-func hash(s string) uint32 {
+func shash(s string) string {
 	h := fnv.New32a()
 	h.Write([]byte(s))
-	return h.Sum32()
+	x := h.Sum32()
+  return strconv.Itoa(int(x))
 }
