@@ -23,7 +23,7 @@ import "hash/fnv"
 //    f-0, f-1, ..., f-<nMap-1>
 // one for each Map job.
 //
-// DoMap() runs Map on each map file and produces nReduce files for each
+// DoMap() runs Map on each map file and produces nReduce files for a
 // map file.  Thus, there will be nMap x nReduce files after all map
 // jobs are done:
 //    f-0-0, ..., f-0-0, f-0-<nReduce-1>, ...,
