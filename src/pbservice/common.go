@@ -1,8 +1,5 @@
 package pbservice
 
-import "hash/fnv"
-import "strconv"
-
 const (
 	OK             = "OK"
 	ErrNoKey       = "ErrNoKey"
@@ -12,9 +9,8 @@ const (
 type Err string
 
 type PutArgs struct {
-	Key     string
-	Value   string
-	PutType int // For PutX
+	Key   string
+	Value string
 	// You'll have to add definitions here.
 
 	// Field names must start with capital letters,
@@ -22,8 +18,21 @@ type PutArgs struct {
 }
 
 type PutReply struct {
-	Err           Err
-	PreviousValue string // For PutHash
+	Err Err
+}
+
+type PutAppendArgs struct {
+	Key   string
+	Value string
+	// You'll have to add definitions here.
+
+	// Field names must start with capital letters,
+	// otherwise RPC will break.
+}
+
+type PutAppendReply struct {
+	Err      Err
+	Previous string
 }
 
 type GetArgs struct {
@@ -38,10 +47,3 @@ type GetReply struct {
 
 
 // Your RPC definitions here.
-
-func shash(s string) string {
-	h := fnv.New32a()
-	h.Write([]byte(s))
-	x := h.Sum32()
-  return strconv.Itoa(int(x))
-}

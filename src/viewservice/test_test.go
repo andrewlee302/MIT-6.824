@@ -116,8 +116,8 @@ func Test1(t *testing.T) {
 
 	// start ck3, kill the primary (ck2), the previous backup (ck1)
 	// should become the server, and ck3 the backup.
-  // this should happen in a single view change, without
-  // any period in which there's no backup.
+	// this should happen in a single view change, without
+	// any period in which there's no backup.
 	fmt.Printf("Test: Idle third server becomes backup if primary fails ...\n")
 
 	{

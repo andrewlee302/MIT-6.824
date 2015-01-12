@@ -61,6 +61,14 @@ func TestBasicFail(t *testing.T) {
 	ck.Put("1", "v1a")
 	check(ck, "1", "v1a")
 
+	ck.PutAppend("ak", "hello")
+	check(ck, "ak", "hello")
+	ck.Put("ak", "xx")
+	if ck.PutAppend("ak", "yy") != "xx" {
+		t.Fatal("PutAppend wrong return")
+	}
+	check(ck, "ak", "xxyy")
+
 	fmt.Printf("  ... Passed\n")
 
 	// add a backup
@@ -88,6 +96,23 @@ func TestBasicFail(t *testing.T) {
 
 	ck.Put("4", "44")
 	check(ck, "4", "44")
+
+	fmt.Printf("  ... Passed\n")
+
+	fmt.Printf("Test: Count RPCs to viewserver ...\n")
+
+	count1 := int(vs.GetRPCCount())
+	t1 := time.Now()
+	for i := 0; i < 100; i++ {
+		ck.Put("xk"+strconv.Itoa(i), strconv.Itoa(i))
+	}
+	count2 := int(vs.GetRPCCount())
+	t2 := time.Now()
+	dt := t2.Sub(t1)
+	allowed := 2 * (dt / (100 * time.Millisecond)) // two servers tick()ing 10/second
+	if (count2 - count1) > int(allowed)+20 {
+		t.Fatal("too many viewserver RPCs")
+	}
 
 	fmt.Printf("  ... Passed\n")
 
@@ -145,13 +170,13 @@ func TestBasicFail(t *testing.T) {
 func TestAtMostOnce(t *testing.T) {
 	runtime.GOMAXPROCS(4)
 
-	tag := "csu"
+	tag := "tamo"
 	vshost := port(tag+"v", 1)
 	vs := viewservice.StartServer(vshost)
 	time.Sleep(time.Second)
 	vck := viewservice.MakeClerk("", vshost)
 
-	fmt.Printf("Test: at-most-once Put; unreliable ...\n")
+	fmt.Printf("Test: at-most-once PutAppend; unreliable ...\n")
 
 	const nservers = 1
 	var sa [nservers]*PBServer
@@ -176,12 +201,11 @@ func TestAtMostOnce(t *testing.T) {
 	val := ""
 	for i := 0; i < 100; i++ {
 		v := strconv.Itoa(i)
-		pv := ck.PutHash(k, v)
+		pv := ck.PutAppend(k, v)
 		if pv != val {
-			t.Fatalf("ck.Puthash() returned %v but expected %v\n", pv, val)
+			t.Fatalf("ck.PutAppend() returned %v but expected %v\n", pv, val)
 		}
-		h := shash(val + v)
-		val = h
+		val = val + v
 	}
 
 	v := ck.Get(k)
@@ -374,6 +398,134 @@ func TestConcurrentSame(t *testing.T) {
 			t.Fatalf("Get(%v) from backup; wanted %v, got %v", i, vals[i], z)
 		}
 	}
+
+	fmt.Printf("  ... Passed\n")
+
+	for i := 0; i < nservers; i++ {
+		sa[i].kill()
+	}
+	time.Sleep(time.Second)
+	vs.Kill()
+	time.Sleep(time.Second)
+}
+
+// check that all known appends are present in a value,
+// and are in order for each concurrent client.
+func checkAppends(t *testing.T, v string, counts []int) {
+	nclients := len(counts)
+	for i := 0; i < nclients; i++ {
+		lastoff := -1
+		for j := 0; j < counts[i]; j++ {
+			wanted := "x " + strconv.Itoa(i) + " " + strconv.Itoa(j) + " y"
+			off := strings.Index(v, wanted)
+			if off < 0 {
+				t.Fatalf("missing element in PutAppend result")
+			}
+			off1 := strings.LastIndex(v, wanted)
+			if off1 != off {
+				t.Fatalf("duplicate element in PutAppend result")
+			}
+			if off <= lastoff {
+				t.Fatalf("wrong order for element in PutAppend result")
+			}
+			lastoff = off
+		}
+	}
+}
+
+// do a bunch of concurrent PutAppend()s on the same key,
+// then check that primary and backup have identical values.
+// i.e. that they processed the PutAppend()s in the same order.
+func TestConcurrentSameAppend(t *testing.T) {
+	runtime.GOMAXPROCS(4)
+
+	tag := "csa"
+	vshost := port(tag+"v", 1)
+	vs := viewservice.StartServer(vshost)
+	time.Sleep(time.Second)
+	vck := viewservice.MakeClerk("", vshost)
+
+	fmt.Printf("Test: Concurrent PutAppend()s to the same key ...\n")
+
+	const nservers = 2
+	var sa [nservers]*PBServer
+	for i := 0; i < nservers; i++ {
+		sa[i] = StartServer(vshost, port(tag, i+1))
+	}
+
+	for iters := 0; iters < viewservice.DeadPings*2; iters++ {
+		view, _ := vck.Get()
+		if view.Primary != "" && view.Backup != "" {
+			break
+		}
+		time.Sleep(viewservice.PingInterval)
+	}
+
+	// give p+b time to ack, initialize
+	time.Sleep(viewservice.PingInterval * viewservice.DeadPings)
+
+	view1, _ := vck.Get()
+
+	// code for i'th concurrent client thread.
+	ff := func(i int, ch chan int) {
+		ret := -1
+		defer func() { ch <- ret }()
+		ck := MakeClerk(vshost, "")
+		n := 0
+		for n < 50 {
+			v := "x " + strconv.Itoa(i) + " " + strconv.Itoa(n) + " y"
+			ck.PutAppend("k", v)
+			n += 1
+		}
+		ret = n
+	}
+
+	// start the concurrent clients
+	const nclients = 3
+	chans := []chan int{}
+	for i := 0; i < nclients; i++ {
+		chans = append(chans, make(chan int))
+		go ff(i, chans[i])
+	}
+
+	// wait for the clients, accumulate PutAppend counts.
+	counts := []int{}
+	for i := 0; i < nclients; i++ {
+		n := <-chans[i]
+		if n < 0 {
+			t.Fatalf("child failed")
+		}
+		counts = append(counts, n)
+	}
+
+	ck := MakeClerk(vshost, "")
+
+	// check that primary's copy of the value has all
+	// the PutAppend()s.
+	checkAppends(t, ck.Get("k"), counts)
+
+	// kill the primary so we can check the backup
+	for i := 0; i < nservers; i++ {
+		if view1.Primary == sa[i].me {
+			sa[i].kill()
+			break
+		}
+	}
+	for iters := 0; iters < viewservice.DeadPings*2; iters++ {
+		view, _ := vck.Get()
+		if view.Primary == view1.Backup {
+			break
+		}
+		time.Sleep(viewservice.PingInterval)
+	}
+	view2, _ := vck.Get()
+	if view2.Primary != view1.Backup {
+		t.Fatal("wrong Primary")
+	}
+
+	// check that backup's copy of the value has all
+	// the PutAppend()s.
+	checkAppends(t, ck.Get("k"), counts)
 
 	fmt.Printf("  ... Passed\n")
 
@@ -589,29 +741,6 @@ func TestRepeatedCrash(t *testing.T) {
 	time.Sleep(time.Second)
 }
 
-func checkSchedule(fv string, t *testing.T) {
-	// fmt.Printf("checkSchedule %s\n", fv)
-	state := map[string]int64{}
-	splits := strings.Split(fv, ";")
-	for i := range splits {
-		nums := strings.Split(splits[i], ",")
-		// fmt.Printf("nums %v %d", nums, len(nums))
-		if len(nums) > 1 {
-			n2, err := strconv.ParseInt(nums[1], 0, 32)
-			if err != nil {
-				t.Fatalf("checkSchedule: cannot convert %s\n", nums[1])
-			}
-			n1, ok := state[nums[0]]
-			if ok {
-				if n2 != n1+1 {
-					t.Fatalf("checkSchedule: for client %s expected %d but saw %d in schedule %s\n", nums[0], n1+1, n2, fv)
-				}
-			}
-			state[nums[0]] = n2
-		}
-	}
-}
-
 func TestRepeatedCrashUnreliable(t *testing.T) {
 	runtime.GOMAXPROCS(4)
 
@@ -661,48 +790,47 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 		}
 	}()
 
+	// concurrent client thread.
+	ff := func(i int, ch chan int) {
+		ret := -1
+		defer func() { ch <- ret }()
+		ck := MakeClerk(vshost, "")
+		n := 0
+		for done == false {
+			v := "x " + strconv.Itoa(i) + " " + strconv.Itoa(n) + " y"
+			ck.PutAppend("0", v)
+			// if no sleep here, then server tick() threads do not get
+			// enough time to Ping the viewserver.
+			time.Sleep(10 * time.Millisecond)
+			n++
+		}
+		ret = n
+	}
+
 	const nth = 2
-	var cha [nth]chan bool
-	for xi := 0; xi < nth; xi++ {
-		cha[xi] = make(chan bool)
-		go func(i int) {
-			ok := false
-			defer func() { cha[i] <- ok }()
-			ck := MakeClerk(vshost, "")
-			data := map[string]string{}
-			// rr := rand.New(rand.NewSource(int64(os.Getpid()+i)))
-			k := "0" // strconv.Itoa(i)
-			data[k] = ""
-			n := 0
-			for done == false {
-				id := strconv.Itoa(i)
-				v := id + "," + strconv.Itoa(n)
-				ck.PutAppend(k, v)
-				// if no sleep here, then server tick() threads do not get
-				// enough time to Ping the viewserver.
-				time.Sleep(10 * time.Millisecond)
-				n++
-			}
-			ok = true
-		}(xi)
+	var cha [nth]chan int
+	for i := 0; i < nth; i++ {
+		cha[i] = make(chan int)
+		go ff(i, cha[i])
 	}
 
 	time.Sleep(20 * time.Second)
 	done = true
 
-	fmt.Printf("  ... Put/Gets done ... \n")
+	fmt.Printf("  ... PutAppends done ... \n")
 
+	counts := []int{}
 	for i := 0; i < nth; i++ {
-		ok := <-cha[i]
-		if ok == false {
+		n := <-cha[i]
+		if n < 0 {
 			t.Fatal("child failed")
 		}
+		counts = append(counts, n)
 	}
 
 	ck := MakeClerk(vshost, "")
 
-	fv := ck.Get("0")
-	checkSchedule(fv, t)
+	checkAppends(t, ck.Get("0"), counts)
 
 	ck.Put("aaa", "bbb")
 	if v := ck.Get("aaa"); v != "bbb" {

@@ -23,20 +23,6 @@ type PBServer struct {
 	// Your declarations here.
 }
 
-func (pb *PBServer) Duplicate(ClientId int64, Seq int) (*ClientState, bool) {
-	clnt, ok := pb.clients[ClientId]
-	if ok {
-		if Seq < clnt.Seq {
-			log.Fatalf("Duplicate: Fatal Old %d Last seen %d\n", Seq, clnt.Seq)
-			return &clnt, true
-		}
-		if Seq == clnt.Seq {
-			// fmt.Printf("Duplicate: duplicate clnt %d seq %d return %v %s\n", ClientId, Seq, clnt.Err, clnt.Value);
-			return &clnt, true
-		}
-	}
-	return nil, false
-}
 
 func (pb *PBServer) Get(args *GetArgs, reply *GetReply) error {
 
@@ -45,28 +31,19 @@ func (pb *PBServer) Get(args *GetArgs, reply *GetReply) error {
 	return nil
 }
 
-func (pb *PBServer) DoPut(key string, val string, puttype int) string {
-	oldvalue, _ := pb.data[key]
-	switch puttype {
-	case PutUpdate:
-		pb.data[key] = val
-	case PutHash:
-		h := shash(pb.data[key] + val)
-		pb.data[key] = h
-	case PutAppend:
-		pb.data[key] = pb.data[key] + ";" + val
-	}
-	return oldvalue
-}
 
 func (pb *PBServer) Put(args *PutArgs, reply *PutReply) error {
 	reply.Err = OK
-
-
 	// Your code here.
-
 	return nil
 }
+
+func (pb *PBServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
+	reply.Err = OK
+	// Your code here.
+	return nil
+}
+
 
 
 //

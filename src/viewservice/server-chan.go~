@@ -1,43 +1,38 @@
-
 package viewservice
 
 import "net"
 import "net/rpc"
 import "log"
 import "time"
-import "sync"
 import "fmt"
 import "os"
-import "sync/atomic"
+
+// Debugging
+const Debug = 0
+
+func DPrintf(format string, a ...interface{}) (n int, err error) {
+	if Debug > 0 {
+		n, err = fmt.Printf(format, a...)
+	}
+	return
+}
+
 
 type ViewServer struct {
-	mu       sync.Mutex
-	l        net.Listener
-	dead     bool  // for testing
-	rpccount int32 // for testing
-	me       string
-
+	l    net.Listener
+	dead bool
+	me   string
 
 	// Your declarations here.
 }
 
-//
-// server Ping RPC handler.
-//
 func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
-
-	// Your code here.
-
+	// Your code here
 	return nil
 }
 
-//
-// server Get() RPC handler.
-//
 func (vs *ViewServer) Get(args *GetArgs, reply *GetReply) error {
-
-	// Your code here.
-
+	// Your code here
 	return nil
 }
 
@@ -48,8 +43,7 @@ func (vs *ViewServer) Get(args *GetArgs, reply *GetReply) error {
 // accordingly.
 //
 func (vs *ViewServer) tick() {
-
-	// Your code here.
+	// Your code here
 }
 
 //
@@ -60,11 +54,6 @@ func (vs *ViewServer) tick() {
 func (vs *ViewServer) Kill() {
 	vs.dead = true
 	vs.l.Close()
-}
-
-// please don't change this function.
-func (vs *ViewServer) GetRPCCount() int32 {
-	return atomic.LoadInt32(&vs.rpccount)
 }
 
 func StartServer(me string) *ViewServer {
@@ -93,7 +82,6 @@ func StartServer(me string) *ViewServer {
 		for vs.dead == false {
 			conn, err := vs.l.Accept()
 			if err == nil && vs.dead == false {
-				atomic.AddInt32(&vs.rpccount, 1)
 				go rpcs.ServeConn(conn)
 			} else if err == nil {
 				conn.Close()

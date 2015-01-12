@@ -4,8 +4,6 @@ import "viewservice"
 import "net/rpc"
 import "fmt"
 
-// You'll probably need these:
-// import "time"
 import "crypto/rand"
 import "math/big"
 
@@ -15,6 +13,13 @@ type Clerk struct {
 	// Your declarations here
 }
 
+// this may come in handy.
+func nrand() int64 {
+	max := big.NewInt(int64(1) << 62)
+	bigx, _ := rand.Int(rand.Reader, max)
+	x := bigx.Int64()
+	return x
+}
 
 func MakeClerk(vshost string, me string) *Clerk {
 	ck := new(Clerk)
@@ -76,20 +81,18 @@ func (ck *Clerk) Get(key string) string {
 // tell the primary to update key's value.
 // must keep trying until it succeeds.
 //
-func (ck *Clerk) PutExt(key string, value string, puttype int) string {
+func (ck *Clerk) Put(key string, value string) {
+
+	// Your code here.
+	return
+}
+
+//
+// tell the primary to append to key's value.
+// must keep trying until it succeeds.
+//
+func (ck *Clerk) PutAppend(key string, value string) string {
 
 	// Your code here.
 	return "???"
-}
-
-func (ck *Clerk) Put(key string, value string) {
-	ck.PutExt(key, value, PutUpdate)
-}
-func (ck *Clerk) PutHash(key string, value string) string {
-	v := ck.PutExt(key, value, PutHash)
-	return v
-}
-func (ck *Clerk) PutAppend(key string, value string) string {
-	v := ck.PutExt(key, value, PutAppend)
-	return v
 }

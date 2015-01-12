@@ -8,14 +8,12 @@ import "time"
 import "sync"
 import "fmt"
 import "os"
-import "sync/atomic"
 
 type ViewServer struct {
-	mu       sync.Mutex
-	l        net.Listener
-	dead     bool  // for testing
-	rpccount int32 // for testing
-	me       string
+	mu   sync.Mutex
+	l    net.Listener
+	dead bool
+	me   string
 
 
 	// Your declarations here.
@@ -62,11 +60,6 @@ func (vs *ViewServer) Kill() {
 	vs.l.Close()
 }
 
-// please don't change this function.
-func (vs *ViewServer) GetRPCCount() int32 {
-	return atomic.LoadInt32(&vs.rpccount)
-}
-
 func StartServer(me string) *ViewServer {
 	vs := new(ViewServer)
 	vs.me = me
@@ -93,7 +86,6 @@ func StartServer(me string) *ViewServer {
 		for vs.dead == false {
 			conn, err := vs.l.Accept()
 			if err == nil && vs.dead == false {
-				atomic.AddInt32(&vs.rpccount, 1)
 				go rpcs.ServeConn(conn)
 			} else if err == nil {
 				conn.Close()

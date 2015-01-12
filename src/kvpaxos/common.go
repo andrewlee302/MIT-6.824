@@ -39,5 +39,5 @@ func shash(s string) string {
 	h := fnv.New32a()
 	h.Write([]byte(s))
 	x := h.Sum32()
-  return strconv.Itoa(int(x))
+	return strconv.Itoa(int(x))
 }

@@ -1,0 +1,422 @@
+2015/01/12 13:08:07 method DoGet has wrong number of ins: 2
+2015/01/12 13:08:07 method DoPing has wrong number of ins: 2
+2015/01/12 13:08:07 method DoTick has wrong number of ins: 1
+2015/01/12 13:08:07 method Kill has wrong number of ins: 1
+2015/01/12 13:08:07 method StateMachine has wrong number of ins: 1
+Test: Single primary, no backup ...
+2015/01/12 13:08:08 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:08 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:08 method PutCommon has wrong number of ins: 6
+  ... Passed
+Test: Add a backup ...
+2015/01/12 13:08:09 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:09 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:09 method PutCommon has wrong number of ins: 6
+  ... Passed
+Test: Primary failure ...
+  ... Passed
+Test: Kill last server, new one should not be active ...
+2015/01/12 13:08:11 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:11 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:11 method PutCommon has wrong number of ins: 6
+  ... Passed
+2015/01/12 13:08:16 method DoGet has wrong number of ins: 2
+2015/01/12 13:08:16 method DoPing has wrong number of ins: 2
+2015/01/12 13:08:16 method DoTick has wrong number of ins: 1
+2015/01/12 13:08:16 method Kill has wrong number of ins: 1
+2015/01/12 13:08:16 method StateMachine has wrong number of ins: 1
+Test: at-most-once PutAppend; unreliable ...
+2015/01/12 13:08:17 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:17 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:17 method PutCommon has wrong number of ins: 6
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: socket is not connected
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+  ... Passed
+2015/01/12 13:08:35 method DoGet has wrong number of ins: 2
+2015/01/12 13:08:35 method DoPing has wrong number of ins: 2
+2015/01/12 13:08:35 method DoTick has wrong number of ins: 1
+2015/01/12 13:08:35 method Kill has wrong number of ins: 1
+2015/01/12 13:08:35 method StateMachine has wrong number of ins: 1
+2015/01/12 13:08:36 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:36 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:36 method PutCommon has wrong number of ins: 6
+2015/01/12 13:08:37 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:37 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:37 method PutCommon has wrong number of ins: 6
+2015/01/12 13:08:38 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:38 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:38 method PutCommon has wrong number of ins: 6
+Test: Put() immediately after backup failure ...
+  ... Passed
+Test: Put() immediately after primary failure ...
+  ... Passed
+2015/01/12 13:08:43 method DoGet has wrong number of ins: 2
+2015/01/12 13:08:43 method DoPing has wrong number of ins: 2
+2015/01/12 13:08:43 method DoTick has wrong number of ins: 1
+2015/01/12 13:08:43 method Kill has wrong number of ins: 1
+2015/01/12 13:08:43 method StateMachine has wrong number of ins: 1
+Test: Concurrent Put()s to the same key ...
+2015/01/12 13:08:44 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:44 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:44 method PutCommon has wrong number of ins: 6
+2015/01/12 13:08:44 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:44 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:44 method PutCommon has wrong number of ins: 6
+  ... Passed
+2015/01/12 13:08:54 method DoGet has wrong number of ins: 2
+2015/01/12 13:08:54 method DoPing has wrong number of ins: 2
+2015/01/12 13:08:54 method DoTick has wrong number of ins: 1
+2015/01/12 13:08:54 method Kill has wrong number of ins: 1
+2015/01/12 13:08:54 method StateMachine has wrong number of ins: 1
+Test: Concurrent PutAppend()s to the same key ...
+2015/01/12 13:08:55 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:55 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:55 method PutCommon has wrong number of ins: 6
+2015/01/12 13:08:55 method DoPut has wrong number of ins: 4
+2015/01/12 13:08:55 method Duplicate reply type not a pointer: int
+2015/01/12 13:08:55 method PutCommon has wrong number of ins: 6
+  ... Passed
+2015/01/12 13:09:04 method DoGet has wrong number of ins: 2
+2015/01/12 13:09:04 method DoPing has wrong number of ins: 2
+2015/01/12 13:09:04 method DoTick has wrong number of ins: 1
+2015/01/12 13:09:04 method Kill has wrong number of ins: 1
+2015/01/12 13:09:04 method StateMachine has wrong number of ins: 1
+Test: Concurrent Put()s to the same key; unreliable ...
+2015/01/12 13:09:05 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:05 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:05 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:05 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:05 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:05 method PutCommon has wrong number of ins: 6
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-csu-2: broken pipe
+write unix /var/tmp/824-501/pb-18308-csu-1: broken pipe
+unexpected EOF
+unexpected EOF
+  ... Passed
+2015/01/12 13:09:15 method DoGet has wrong number of ins: 2
+2015/01/12 13:09:15 method DoPing has wrong number of ins: 2
+2015/01/12 13:09:15 method DoTick has wrong number of ins: 1
+2015/01/12 13:09:15 method Kill has wrong number of ins: 1
+2015/01/12 13:09:15 method StateMachine has wrong number of ins: 1
+Test: Repeated failures/restarts ...
+2015/01/12 13:09:16 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:16 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:16 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:16 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:16 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:16 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:16 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:16 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:16 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:18 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:18 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:18 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:20 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:20 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:20 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:22 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:22 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:22 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:24 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:24 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:24 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:26 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:26 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:26 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:28 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:28 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:28 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:30 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:30 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:30 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:32 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:32 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:32 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:34 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:34 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:34 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:36 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:36 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:36 method PutCommon has wrong number of ins: 6
+  ... Put/Gets done ... 
+  ... Passed
+2015/01/12 13:09:39 method DoGet has wrong number of ins: 2
+2015/01/12 13:09:39 method DoPing has wrong number of ins: 2
+2015/01/12 13:09:39 method DoTick has wrong number of ins: 1
+2015/01/12 13:09:39 method Kill has wrong number of ins: 1
+2015/01/12 13:09:39 method StateMachine has wrong number of ins: 1
+Test: Repeated failures/restarts with concurrent updates to same key; unreliable ...
+2015/01/12 13:09:40 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:40 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:40 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:40 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:40 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:40 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:40 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:40 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:40 method PutCommon has wrong number of ins: 6
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-rcu-1: broken pipe
+write unix /var/tmp/824-501/pb-18308-rcu-3: broken pipe
+2015/01/12 13:09:42 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:42 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:42 method PutCommon has wrong number of ins: 6
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-rcu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-rcu-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-rcu-1: broken pipe
+unexpected EOF
+unexpected EOF
+2015/01/12 13:09:44 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:44 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:44 method PutCommon has wrong number of ins: 6
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/pb-18308-rcu-1: broken pipe
+unexpected EOF
+unexpected EOF
+2015/01/12 13:09:46 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:46 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:46 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:48 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:48 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:48 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:50 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:50 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:50 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:52 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:52 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:52 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:54 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:54 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:54 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:56 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:56 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:56 method PutCommon has wrong number of ins: 6
+2015/01/12 13:09:58 method DoPut has wrong number of ins: 4
+2015/01/12 13:09:58 method Duplicate reply type not a pointer: int
+2015/01/12 13:09:58 method PutCommon has wrong number of ins: 6
+2015/01/12 13:10:00 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:00 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:00 method PutCommon has wrong number of ins: 6
+  ... PutAppends done ... 
+  ... Passed
+2015/01/12 13:10:03 method DoGet has wrong number of ins: 2
+2015/01/12 13:10:03 method DoPing has wrong number of ins: 2
+2015/01/12 13:10:03 method DoTick has wrong number of ins: 1
+2015/01/12 13:10:03 method Kill has wrong number of ins: 1
+2015/01/12 13:10:03 method StateMachine has wrong number of ins: 1
+Test: Old primary does not serve Gets ...
+2015/01/12 13:10:04 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:04 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:04 method PutCommon has wrong number of ins: 6
+2015/01/12 13:10:05 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:05 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:05 method PutCommon has wrong number of ins: 6
+  ... Passed
+2015/01/12 13:10:12 method DoGet has wrong number of ins: 2
+2015/01/12 13:10:12 method DoPing has wrong number of ins: 2
+2015/01/12 13:10:12 method DoTick has wrong number of ins: 1
+2015/01/12 13:10:12 method Kill has wrong number of ins: 1
+2015/01/12 13:10:12 method StateMachine has wrong number of ins: 1
+2015/01/12 13:10:13 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:13 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:13 method PutCommon has wrong number of ins: 6
+Test: Partitioned old primary does not complete Gets ...
+2015/01/12 13:10:14 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:14 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:14 method PutCommon has wrong number of ins: 6
+2015/01/12 13:10:16 method DoPut has wrong number of ins: 4
+2015/01/12 13:10:16 method Duplicate reply type not a pointer: int
+2015/01/12 13:10:16 method PutCommon has wrong number of ins: 6
+  ... Passed
+PASS
+ok  	pbservice	137.898s
