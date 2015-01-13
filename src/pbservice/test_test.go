@@ -101,6 +101,12 @@ func TestBasicFail(t *testing.T) {
 
 	fmt.Printf("Test: Count RPCs to viewserver ...\n")
 
+	// verify that the client or server doesn't contact the
+	// viewserver for every request -- i.e. that both client
+	// and servers cache the current view and only refresh
+	// it when something seems to be wrong. this test allows
+	// each server to Ping() the viewserver 10 times / second.
+
 	count1 := int(vs.GetRPCCount())
 	t1 := time.Now()
 	for i := 0; i < 100; i++ {
@@ -572,13 +578,23 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 	// give p+b time to ack, initialize
 	time.Sleep(viewservice.PingInterval * viewservice.DeadPings)
 
+	{
+		ck := MakeClerk(vshost, "")
+		ck.Put("0", "x")
+		ck.Put("1", "x")
+	}
+
 	done := false
 
 	view1, _ := vck.Get()
 	const nclients = 3
 	const nkeys = 2
+	cha := []chan bool{}
 	for xi := 0; xi < nclients; xi++ {
-		go func(i int) {
+		cha = append(cha, make(chan bool))
+		go func(i int, ch chan bool) {
+			ok := false
+			defer func() { ch <- ok }()
 			ck := MakeClerk(vshost, "")
 			rr := rand.New(rand.NewSource(int64(os.Getpid() + i)))
 			for done == false {
@@ -586,12 +602,19 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 				v := strconv.Itoa(rr.Int())
 				ck.Put(k, v)
 			}
-		}(xi)
+			ok = true
+		}(xi, cha[xi])
 	}
 
 	time.Sleep(5 * time.Second)
 	done = true
-	time.Sleep(time.Second)
+
+	for i := 0; i < len(cha); i++ {
+		ok := <-cha[i]
+		if ok == false {
+			t.Fatalf("child failed")
+		}
+	}
 
 	// read from primary
 	ck := MakeClerk(vshost, "")
