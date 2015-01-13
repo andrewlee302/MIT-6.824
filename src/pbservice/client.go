@@ -78,21 +78,27 @@ func (ck *Clerk) Get(key string) string {
 }
 
 //
+// send a Put or Append RPC
+//
+func (ck *Clerk) PutAppend(key string, value string, op string) string {
+
+	// Your code here.
+	return "???"
+}
+
+//
 // tell the primary to update key's value.
 // must keep trying until it succeeds.
 //
 func (ck *Clerk) Put(key string, value string) {
-
-	// Your code here.
-	return
+  ck.PutAppend(key, value, "Put")
 }
 
 //
-// tell the primary to append to key's value.
+// tell the primary to append to key's value
+// and return the old value.
 // must keep trying until it succeeds.
 //
-func (ck *Clerk) PutAppend(key string, value string) string {
-
-	// Your code here.
-	return "???"
+func (ck *Clerk) Append(key string, value string) string {
+  return ck.PutAppend(key, value, "Append")
 }

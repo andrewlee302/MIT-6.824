@@ -61,11 +61,11 @@ func TestBasicFail(t *testing.T) {
 	ck.Put("1", "v1a")
 	check(ck, "1", "v1a")
 
-	ck.PutAppend("ak", "hello")
+	ck.Append("ak", "hello")
 	check(ck, "ak", "hello")
 	ck.Put("ak", "xx")
-	if ck.PutAppend("ak", "yy") != "xx" {
-		t.Fatal("PutAppend wrong return")
+	if ck.Append("ak", "yy") != "xx" {
+		t.Fatal("Append wrong return")
 	}
 	check(ck, "ak", "xxyy")
 
@@ -176,7 +176,7 @@ func TestAtMostOnce(t *testing.T) {
 	time.Sleep(time.Second)
 	vck := viewservice.MakeClerk("", vshost)
 
-	fmt.Printf("Test: at-most-once PutAppend; unreliable ...\n")
+	fmt.Printf("Test: at-most-once Append; unreliable ...\n")
 
 	const nservers = 1
 	var sa [nservers]*PBServer
@@ -201,9 +201,9 @@ func TestAtMostOnce(t *testing.T) {
 	val := ""
 	for i := 0; i < 100; i++ {
 		v := strconv.Itoa(i)
-		pv := ck.PutAppend(k, v)
+		pv := ck.Append(k, v)
 		if pv != val {
-			t.Fatalf("ck.PutAppend() returned %v but expected %v\n", pv, val)
+			t.Fatalf("ck.Append() returned %v but expected %v\n", pv, val)
 		}
 		val = val + v
 	}
@@ -419,23 +419,23 @@ func checkAppends(t *testing.T, v string, counts []int) {
 			wanted := "x " + strconv.Itoa(i) + " " + strconv.Itoa(j) + " y"
 			off := strings.Index(v, wanted)
 			if off < 0 {
-				t.Fatalf("missing element in PutAppend result")
+				t.Fatalf("missing element in Append result")
 			}
 			off1 := strings.LastIndex(v, wanted)
 			if off1 != off {
-				t.Fatalf("duplicate element in PutAppend result")
+				t.Fatalf("duplicate element in Append result")
 			}
 			if off <= lastoff {
-				t.Fatalf("wrong order for element in PutAppend result")
+				t.Fatalf("wrong order for element in Append result")
 			}
 			lastoff = off
 		}
 	}
 }
 
-// do a bunch of concurrent PutAppend()s on the same key,
+// do a bunch of concurrent Append()s on the same key,
 // then check that primary and backup have identical values.
-// i.e. that they processed the PutAppend()s in the same order.
+// i.e. that they processed the Append()s in the same order.
 func TestConcurrentSameAppend(t *testing.T) {
 	runtime.GOMAXPROCS(4)
 
@@ -445,7 +445,7 @@ func TestConcurrentSameAppend(t *testing.T) {
 	time.Sleep(time.Second)
 	vck := viewservice.MakeClerk("", vshost)
 
-	fmt.Printf("Test: Concurrent PutAppend()s to the same key ...\n")
+	fmt.Printf("Test: Concurrent Append()s to the same key ...\n")
 
 	const nservers = 2
 	var sa [nservers]*PBServer
@@ -474,7 +474,7 @@ func TestConcurrentSameAppend(t *testing.T) {
 		n := 0
 		for n < 50 {
 			v := "x " + strconv.Itoa(i) + " " + strconv.Itoa(n) + " y"
-			ck.PutAppend("k", v)
+			ck.Append("k", v)
 			n += 1
 		}
 		ret = n
@@ -488,7 +488,7 @@ func TestConcurrentSameAppend(t *testing.T) {
 		go ff(i, chans[i])
 	}
 
-	// wait for the clients, accumulate PutAppend counts.
+	// wait for the clients, accumulate Append counts.
 	counts := []int{}
 	for i := 0; i < nclients; i++ {
 		n := <-chans[i]
@@ -501,8 +501,9 @@ func TestConcurrentSameAppend(t *testing.T) {
 	ck := MakeClerk(vshost, "")
 
 	// check that primary's copy of the value has all
-	// the PutAppend()s.
-	checkAppends(t, ck.Get("k"), counts)
+	// the Append()s.
+  primaryv := ck.Get("k")
+	checkAppends(t, primaryv, counts)
 
 	// kill the primary so we can check the backup
 	for i := 0; i < nservers; i++ {
@@ -524,8 +525,13 @@ func TestConcurrentSameAppend(t *testing.T) {
 	}
 
 	// check that backup's copy of the value has all
-	// the PutAppend()s.
-	checkAppends(t, ck.Get("k"), counts)
+	// the Append()s.
+  backupv := ck.Get("k")
+	checkAppends(t, backupv, counts)
+
+  if backupv != primaryv {
+    t.Fatal("primary and backup had different values")
+  }
 
 	fmt.Printf("  ... Passed\n")
 
@@ -798,7 +804,7 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 		n := 0
 		for done == false {
 			v := "x " + strconv.Itoa(i) + " " + strconv.Itoa(n) + " y"
-			ck.PutAppend("0", v)
+			ck.Append("0", v)
 			// if no sleep here, then server tick() threads do not get
 			// enough time to Ping the viewserver.
 			time.Sleep(10 * time.Millisecond)
@@ -817,7 +823,7 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 	time.Sleep(20 * time.Second)
 	done = true
 
-	fmt.Printf("  ... PutAppends done ... \n")
+	fmt.Printf("  ... Appends done ... \n")
 
 	counts := []int{}
 	for i := 0; i < nth; i++ {

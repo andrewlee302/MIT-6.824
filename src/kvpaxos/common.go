@@ -1,8 +1,5 @@
 package kvpaxos
 
-import "hash/fnv"
-import "strconv"
-
 const (
 	OK       = "OK"
 	ErrNoKey = "ErrNoKey"
@@ -10,19 +7,20 @@ const (
 
 type Err string
 
-type PutArgs struct {
+// Put or Append
+type PutAppendArgs struct {
 	// You'll have to add definitions here.
 	Key    string
 	Value  string
-	DoHash bool // For PutHash
+	Op     string // "Put" or "Append"
 	// You'll have to add definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
 }
 
-type PutReply struct {
+type PutAppendReply struct {
 	Err           Err
-	PreviousValue string // For PutHash
+	PreviousValue string // For Append
 }
 
 type GetArgs struct {
@@ -33,11 +31,4 @@ type GetArgs struct {
 type GetReply struct {
 	Err   Err
 	Value string
-}
-
-func shash(s string) string {
-	h := fnv.New32a()
-	h.Write([]byte(s))
-	x := h.Sum32()
-	return strconv.Itoa(int(x))
 }

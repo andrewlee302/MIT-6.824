@@ -21,9 +21,9 @@ func port(tag string, host int) string {
 	return s
 }
 
-func NextValue(hprev string, val string) string {
-	h := shash(hprev + val)
-	return h
+// predict value that would result from an Append
+func NextValue(prev string, val string) string {
+  return prev + val
 }
 
 func mcleanup(sma []*shardmaster.ShardMaster) {
@@ -91,7 +91,7 @@ func TestBasic(t *testing.T) {
 	ck := MakeClerk(smh)
 
 	ck.Put("a", "x")
-	v := ck.PutHash("a", "b")
+	v := ck.Append("a", "b")
 	if v != "x" {
 		t.Fatalf("Puthash got wrong value")
 	}
@@ -285,10 +285,10 @@ func doConcurrent(t *testing.T, unreliable bool) {
 			last := ""
 			for iters := 0; iters < 3; iters++ {
 				nv := strconv.Itoa(rand.Int())
-				v := ck.PutHash(key, nv)
+				v := ck.Append(key, nv)
 				if v != last {
 					ok = false
-					t.Fatalf("PutHash(%v) expected %v got %v\n", key, last, v)
+					t.Fatalf("Append(%v) expected %v got %v\n", key, last, v)
 				}
 				last = NextValue(last, nv)
 				v = ck.Get(key)

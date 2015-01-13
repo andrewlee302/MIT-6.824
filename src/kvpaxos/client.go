@@ -1,6 +1,8 @@
 package kvpaxos
 
 import "net/rpc"
+import "crypto/rand"
+import "math/big"
 
 import "fmt"
 
@@ -9,6 +11,12 @@ type Clerk struct {
 	// You will have to modify this struct.
 }
 
+func nrand() int64 {
+	max := big.NewInt(int64(1) << 62)
+	bigx, _ := rand.Int(rand.Reader, max)
+	x := bigx.Int64()
+	return x
+}
 
 func MakeClerk(servers []string) *Clerk {
 	ck := new(Clerk)
@@ -61,18 +69,17 @@ func (ck *Clerk) Get(key string) string {
 }
 
 //
-// set the value for a key.
-// keeps trying until it succeeds.
+// shared by Put and Append.
 //
-func (ck *Clerk) PutExt(key string, value string, dohash bool) string {
+func (ck *Clerk) PutAppend(key string, value string, op string) string {
 	// You will have to modify this function.
 	return ""
 }
 
 func (ck *Clerk) Put(key string, value string) {
-	ck.PutExt(key, value, false)
+	ck.PutAppend(key, value, "Put")
 }
-func (ck *Clerk) PutHash(key string, value string) string {
-	v := ck.PutExt(key, value, true)
+func (ck *Clerk) Append(key string, value string) string {
+	v := ck.PutAppend(key, value, "Append")
 	return v
 }

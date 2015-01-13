@@ -45,7 +45,7 @@ func (kv *KVPaxos) Get(args *GetArgs, reply *GetReply) error {
 	return nil
 }
 
-func (kv *KVPaxos) Put(args *PutArgs, reply *PutReply) error {
+func (kv *KVPaxos) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
 	// Your code here.
 
 	return nil

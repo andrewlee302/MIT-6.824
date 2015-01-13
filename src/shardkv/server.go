@@ -49,7 +49,8 @@ func (kv *ShardKV) Get(args *GetArgs, reply *GetReply) error {
 	return nil
 }
 
-func (kv *ShardKV) Put(args *PutArgs, reply *PutReply) error {
+// RPC handler for client Put and Append requests
+func (kv *ShardKV) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
 	// Your code here.
 	return nil
 }

@@ -8,19 +8,7 @@ const (
 
 type Err string
 
-type PutArgs struct {
-	Key   string
-	Value string
-	// You'll have to add definitions here.
-
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
-}
-
-type PutReply struct {
-	Err Err
-}
-
+// Put or Append
 type PutAppendArgs struct {
 	Key   string
 	Value string
@@ -32,7 +20,7 @@ type PutAppendArgs struct {
 
 type PutAppendReply struct {
 	Err      Err
-	Previous string
+	PreviousValue string
 }
 
 type GetArgs struct {

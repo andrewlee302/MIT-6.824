@@ -32,16 +32,12 @@ func (pb *PBServer) Get(args *GetArgs, reply *GetReply) error {
 }
 
 
-func (pb *PBServer) Put(args *PutArgs, reply *PutReply) error {
-	reply.Err = OK
-	// Your code here.
-	return nil
-}
-
 func (pb *PBServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
-	reply.Err = OK
-	// Your code here.
-	return nil
+
+  // Your code here.
+
+
+  return nil
 }
 
 

@@ -1,0 +1,2018 @@
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+2015/01/13 06:03:36 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:36 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:36 method Perform has wrong number of ins: 2
+2015/01/13 06:03:36 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:36 method Done has wrong number of ins: 2
+2015/01/13 06:03:36 method Kill has wrong number of ins: 1
+2015/01/13 06:03:36 method Max has wrong number of ins: 1
+2015/01/13 06:03:36 method Min has wrong number of ins: 1
+2015/01/13 06:03:36 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:36 method Status has wrong number of ins: 2
+Test: Basic Join/Leave ...
+  ... Passed
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+2015/01/13 06:03:42 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:42 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:42 method Perform has wrong number of ins: 2
+2015/01/13 06:03:42 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:42 method Done has wrong number of ins: 2
+2015/01/13 06:03:42 method Kill has wrong number of ins: 1
+2015/01/13 06:03:42 method Max has wrong number of ins: 1
+2015/01/13 06:03:42 method Min has wrong number of ins: 1
+2015/01/13 06:03:42 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:42 method Status has wrong number of ins: 2
+Test: Shards really move ...
+  ... Passed
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+2015/01/13 06:03:58 method ClientOP has wrong number of ins: 2
+2015/01/13 06:03:58 method Paxos has wrong number of ins: 2
+2015/01/13 06:03:58 method Perform has wrong number of ins: 2
+2015/01/13 06:03:58 method StateMachine has wrong number of ins: 1
+2015/01/13 06:03:58 method Done has wrong number of ins: 2
+2015/01/13 06:03:58 method Kill has wrong number of ins: 1
+2015/01/13 06:03:58 method Max has wrong number of ins: 1
+2015/01/13 06:03:58 method Min has wrong number of ins: 1
+2015/01/13 06:03:58 method Start reply type not a pointer: interface {}
+2015/01/13 06:03:58 method Status has wrong number of ins: 2
+Test: Reconfiguration with some dead replicas ...
+  ... Passed
+Test: Concurrent Put/Get/Move ...
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+2015/01/13 06:04:06 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:06 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:06 method Perform has wrong number of ins: 2
+2015/01/13 06:04:06 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:06 method Done has wrong number of ins: 2
+2015/01/13 06:04:06 method Kill has wrong number of ins: 1
+2015/01/13 06:04:06 method Max has wrong number of ins: 1
+2015/01/13 06:04:06 method Min has wrong number of ins: 1
+2015/01/13 06:04:06 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:06 method Status has wrong number of ins: 2
+  ... Passed
+Test: Concurrent Put/Get/Move (unreliable) ...
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+2015/01/13 06:04:07 method ClientOP has wrong number of ins: 2
+2015/01/13 06:04:07 method Paxos has wrong number of ins: 2
+2015/01/13 06:04:07 method Perform has wrong number of ins: 2
+2015/01/13 06:04:07 method StateMachine has wrong number of ins: 1
+2015/01/13 06:04:07 method Done has wrong number of ins: 2
+2015/01/13 06:04:07 method Kill has wrong number of ins: 1
+2015/01/13 06:04:07 method Max has wrong number of ins: 1
+2015/01/13 06:04:07 method Min has wrong number of ins: 1
+2015/01/13 06:04:07 method Start reply type not a pointer: interface {}
+2015/01/13 06:04:07 method Status has wrong number of ins: 2
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: socket is not connected
+write unix /var/tmp/824-501/skv-57841-conctrues-6: socket is not connected
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: socket is not connected
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: socket is not connected
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: socket is not connected
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: socket is not connected
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: socket is not connected
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: socket is not connected
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-5: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-3: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-8: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-6: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-7: broken pipe
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: socket is not connected
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-1: broken pipe
+unexpected EOF
+unexpected EOF
+write unix /var/tmp/824-501/skv-57841-conctrues-0: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-2: broken pipe
+write unix /var/tmp/824-501/skv-57841-conctrues-4: broken pipe
+unexpected EOF
+unexpected EOF
+unexpected EOF
+  ... Passed
+PASS
+ok  	shardkv	38.171s

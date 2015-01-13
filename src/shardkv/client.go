@@ -5,7 +5,8 @@ import "net/rpc"
 import "time"
 import "sync"
 import "fmt"
-
+import "crypto/rand"
+import "math/big"
 
 type Clerk struct {
 	mu     sync.Mutex // one RPC at a time
@@ -14,6 +15,12 @@ type Clerk struct {
 	// You'll have to modify Clerk.
 }
 
+func nrand() int64 {
+	max := big.NewInt(int64(1) << 62)
+	bigx, _ := rand.Int(rand.Reader, max)
+	x := bigx.Int64()
+	return x
+}
 
 func MakeClerk(shardmasters []string) *Clerk {
 	ck := new(Clerk)
@@ -111,7 +118,8 @@ func (ck *Clerk) Get(key string) string {
 	return ""
 }
 
-func (ck *Clerk) PutExt(key string, value string, dohash bool) string {
+// send a Put or Append request.
+func (ck *Clerk) PutAppend(key string, value string, op string) string {
 	ck.mu.Lock()
 	defer ck.mu.Unlock()
 
@@ -127,12 +135,12 @@ func (ck *Clerk) PutExt(key string, value string, dohash bool) string {
 		if ok {
 			// try each server in the shard's replication group.
 			for _, srv := range servers {
-				args := &PutArgs{}
+				args := &PutAppendArgs{}
 				args.Key = key
 				args.Value = value
-				args.DoHash = dohash
-				var reply PutReply
-				ok := call(srv, "ShardKV.Put", args, &reply)
+				args.Op = op
+				var reply PutAppendReply
+				ok := call(srv, "ShardKV.PutAppend", args, &reply)
 				if ok && reply.Err == OK {
 					return reply.PreviousValue
 				}
@@ -150,9 +158,9 @@ func (ck *Clerk) PutExt(key string, value string, dohash bool) string {
 }
 
 func (ck *Clerk) Put(key string, value string) {
-	ck.PutExt(key, value, false)
+	ck.PutAppend(key, value, "Put")
 }
-func (ck *Clerk) PutHash(key string, value string) string {
-	v := ck.PutExt(key, value, true)
+func (ck *Clerk) Append(key string, value string) string {
+	v := ck.PutAppend(key, value, "Append")
 	return v
 }
