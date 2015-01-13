@@ -502,7 +502,7 @@ func TestConcurrentSameAppend(t *testing.T) {
 
 	// check that primary's copy of the value has all
 	// the Append()s.
-  primaryv := ck.Get("k")
+	primaryv := ck.Get("k")
 	checkAppends(t, primaryv, counts)
 
 	// kill the primary so we can check the backup
@@ -526,12 +526,12 @@ func TestConcurrentSameAppend(t *testing.T) {
 
 	// check that backup's copy of the value has all
 	// the Append()s.
-  backupv := ck.Get("k")
+	backupv := ck.Get("k")
 	checkAppends(t, backupv, counts)
 
-  if backupv != primaryv {
-    t.Fatal("primary and backup had different values")
-  }
+	if backupv != primaryv {
+		t.Fatal("primary and backup had different values")
+	}
 
 	fmt.Printf("  ... Passed\n")
 

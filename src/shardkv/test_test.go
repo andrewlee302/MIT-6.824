@@ -23,7 +23,7 @@ func port(tag string, host int) string {
 
 // predict value that would result from an Append
 func NextValue(prev string, val string) string {
-  return prev + val
+	return prev + val
 }
 
 func mcleanup(sma []*shardmaster.ShardMaster) {

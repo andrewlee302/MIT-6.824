@@ -91,7 +91,7 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 // must keep trying until it succeeds.
 //
 func (ck *Clerk) Put(key string, value string) {
-  ck.PutAppend(key, value, "Put")
+	ck.PutAppend(key, value, "Put")
 }
 
 //
@@ -100,5 +100,5 @@ func (ck *Clerk) Put(key string, value string) {
 // must keep trying until it succeeds.
 //
 func (ck *Clerk) Append(key string, value string) string {
-  return ck.PutAppend(key, value, "Append")
+	return ck.PutAppend(key, value, "Append")
 }

@@ -34,12 +34,11 @@ func (pb *PBServer) Get(args *GetArgs, reply *GetReply) error {
 
 func (pb *PBServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
 
-  // Your code here.
+	// Your code here.
 
 
-  return nil
+	return nil
 }
-
 
 
 //

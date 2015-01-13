@@ -63,12 +63,12 @@ func TestBasic(t *testing.T) {
 
 	fmt.Printf("Test: Basic put/append/get ...\n")
 
-  ck.Append("app", "x")
-  pv := ck.Append("app", "y")
+	ck.Append("app", "x")
+	pv := ck.Append("app", "y")
 	if pv != "x" {
 		t.Fatalf("wrong Append return; expected %s got %s", "x", pv)
 	}
-  check(t, ck, "app", "xy")
+	check(t, ck, "app", "xy")
 
 	ck.Put("a", "aa")
 	check(t, ck, "a", "aa")
@@ -329,13 +329,13 @@ func TestPartition(t *testing.T) {
 }
 
 func randclerk(kvh []string) *Clerk {
-  sa := make([]string, len(kvh))
-  copy(sa, kvh)
-  for i := range sa {
-    j := rand.Intn(i + 1)
-    sa[i], sa[j] = sa[j], sa[i]
-  }
-  return MakeClerk(sa)
+	sa := make([]string, len(kvh))
+	copy(sa, kvh)
+	for i := range sa {
+		j := rand.Intn(i + 1)
+		sa[i], sa[j] = sa[j], sa[i]
+	}
+	return MakeClerk(sa)
 }
 
 // check that all known appends are present in a value,
@@ -407,7 +407,7 @@ func TestUnreliable(t *testing.T) {
 			go func(me int) {
 				ok := false
 				defer func() { ca[me] <- ok }()
-        myck := randclerk(kvh)
+				myck := randclerk(kvh)
 				key := strconv.Itoa(me)
 				pv := myck.Get(key)
 				ov := myck.Append(key, "0")
@@ -454,7 +454,7 @@ func TestUnreliable(t *testing.T) {
 			ca[cli] = make(chan bool)
 			go func(me int) {
 				defer func() { ca[me] <- true }()
-        myck := randclerk(kvh)
+				myck := randclerk(kvh)
 				if (rand.Int() % 1000) < 500 {
 					myck.Put("b", strconv.Itoa(rand.Int()))
 				} else {
@@ -479,47 +479,47 @@ func TestUnreliable(t *testing.T) {
 
 	fmt.Printf("Test: Concurrent Append to same key, unreliable ...\n")
 
-  ck.Put("k", "")
+	ck.Put("k", "")
 
-  ff := func(me int, ch chan int) {
-    ret := -1
-    defer func() { ch <- ret } ()
-    myck := randclerk(kvh)
-    n := 0
-    for n < 5 {
-      myck.Append("k", "x " + strconv.Itoa(me) + " " + strconv.Itoa(n) + " y")
-      n++
-    }
-    ret = n
-  }
+	ff := func(me int, ch chan int) {
+		ret := -1
+		defer func() { ch <- ret }()
+		myck := randclerk(kvh)
+		n := 0
+		for n < 5 {
+			myck.Append("k", "x "+strconv.Itoa(me)+" "+strconv.Itoa(n)+" y")
+			n++
+		}
+		ret = n
+	}
 
-  ncli := 5
-  cha := []chan int{}
-  for i := 0; i < ncli; i++ {
-    cha = append(cha, make(chan int))
-    go ff(i, cha[i])
-  }
+	ncli := 5
+	cha := []chan int{}
+	for i := 0; i < ncli; i++ {
+		cha = append(cha, make(chan int))
+		go ff(i, cha[i])
+	}
 
-  counts := []int{}
-  for i := 0; i < ncli; i++ {
-    n := <- cha[i]
-    if n < 0 {
-      t.Fatal("client failed")
-    }
-    counts = append(counts, n)
-  }
+	counts := []int{}
+	for i := 0; i < ncli; i++ {
+		n := <-cha[i]
+		if n < 0 {
+			t.Fatal("client failed")
+		}
+		counts = append(counts, n)
+	}
 
-  vx := ck.Get("k")
-  checkAppends(t, vx, counts)
+	vx := ck.Get("k")
+	checkAppends(t, vx, counts)
 
-  {
-    for i := 0; i < nservers; i++ {
-      vi := cka[i].Get("k")
-      if vi != vx {
-        t.Fatalf("mismatch; 0 got %v, %v got %v", vx, i, vi)
-      }
-    }
-  }
+	{
+		for i := 0; i < nservers; i++ {
+			vi := cka[i].Get("k")
+			if vi != vx {
+				t.Fatalf("mismatch; 0 got %v, %v got %v", vx, i, vi)
+			}
+		}
+	}
 
 	fmt.Printf("  ... Passed\n")
 
