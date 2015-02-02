@@ -692,7 +692,7 @@ func TestManyPartition(t *testing.T) {
 					nv := strconv.Itoa(rand.Int())
 					v := myck.Append(key, nv)
 					if v != last {
-						t.Fatalf("%v: puthash wrong value, key %v, wanted %v, got %v",
+						t.Fatalf("%v: Append() wrong value, key %v, wanted %v, got %v",
 							cli, key, last, v)
 					}
 					last = NextValue(last, nv)

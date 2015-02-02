@@ -29,7 +29,7 @@ type PutAppendArgs struct {
 
 type PutAppendReply struct {
 	Err           Err
-	PreviousValue string // For PutHash
+	PreviousValue string // For Append
 }
 
 type GetArgs struct {
