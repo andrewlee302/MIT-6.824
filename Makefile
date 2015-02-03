@@ -16,7 +16,7 @@ LABS=" lab1 lab2a lab2b lab3a lab3b lab4a lab4b "
                 read line; \
                 if test $$line != "yes" ; then echo "Giving up submission"; exit; fi; \
                 if test `du -b "$@-handin.tar.gz" | cut -f 1` -ge 20971520 ; then echo "File exceeds 20MB."; exit; fi; \
-	        curl -F file=@$@-handin.tar.gz -F key=$(KEY) http://6824.scripts.mit.edu/6.824/handin.py/upload; \
+	        curl -F file=@$@-handin.tar.gz -F key=$(KEY) http://6824.scripts.mit.edu/submit/handin.py/upload; \
 	    fi; \
         else \
             echo "Bad target $@. Usage: make [$(LABS)]"; \
