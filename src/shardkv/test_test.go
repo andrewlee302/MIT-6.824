@@ -47,18 +47,18 @@ func (tc *tCluster) start1(gi int, si int, unreliable bool) {
 }
 
 func (tc *tCluster) cleanup() {
+	for i := 0; i < len(tc.masters); i++ {
+		if tc.masters[i] != nil {
+			tc.masters[i].Kill()
+		}
+	}
+
 	for gi := 0; gi < len(tc.groups); gi++ {
 		g := tc.groups[gi]
 		for si := 0; si < len(g.servers); si++ {
 			if g.servers[si] != nil {
 				g.servers[si].kill()
 			}
-		}
-	}
-
-	for i := 0; i < len(tc.masters); i++ {
-		if tc.masters[i] != nil {
-			tc.masters[i].Kill()
 		}
 	}
 }
