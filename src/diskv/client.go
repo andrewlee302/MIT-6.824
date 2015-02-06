@@ -1,4 +1,4 @@
-package shardkv
+package diskv
 
 import "shardmaster"
 import "net/rpc"
@@ -100,7 +100,7 @@ func (ck *Clerk) Get(key string) string {
 				args := &GetArgs{}
 				args.Key = key
 				var reply GetReply
-				ok := call(srv, "ShardKV.Get", args, &reply)
+				ok := call(srv, "DisKV.Get", args, &reply)
 				if ok && (reply.Err == OK || reply.Err == ErrNoKey) {
 					return reply.Value
 				}
@@ -140,7 +140,7 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 				args.Value = value
 				args.Op = op
 				var reply PutAppendReply
-				ok := call(srv, "ShardKV.PutAppend", args, &reply)
+				ok := call(srv, "DisKV.PutAppend", args, &reply)
 				if ok && reply.Err == OK {
 					return reply.PreviousValue
 				}

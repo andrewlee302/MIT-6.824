@@ -14,7 +14,7 @@ package paxos
 //
 // px = paxos.Make(peers []string, me string)
 // px.Start(seq int, v interface{}) -- start agreement on new instance
-// px.Status(seq int) (decided bool, v interface{}) -- get info about an instance
+// px.Status(seq int) (Fate, v interface{}) -- get info about an instance
 // px.Done(seq int) -- ok to forget all instances <= seq
 // px.Max() int -- highest instance seq known, or -1
 // px.Min() int -- instances before this seq have been forgotten
@@ -30,6 +30,18 @@ import "sync"
 import "fmt"
 import "math/rand"
 
+
+// px.Status() return values, indicating
+// whether an agreement has been decided,
+// or Paxos has not yet reached agreement,
+// or it was agreed but forgotten (i.e. < Min()).
+type Fate int
+
+const (
+	Decided   Fate = 1
+	Pending        = 2 // not yet decided.
+	Forgotten      = 3 // decided but forgotten.
+)
 
 type Paxos struct {
 	mu         sync.Mutex
@@ -152,10 +164,11 @@ func (px *Paxos) Min() int {
 // should just inspect the local peer state;
 // it should not contact other Paxos peers.
 //
-func (px *Paxos) Status(seq int) (bool, interface{}) {
+func (px *Paxos) Status(seq int) (Fate, interface{}) {
 	// Your code here.
-	return false, nil
+	return Pending, nil
 }
+
 
 
 //
