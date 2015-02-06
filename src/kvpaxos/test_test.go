@@ -64,10 +64,7 @@ func TestBasic(t *testing.T) {
 	fmt.Printf("Test: Basic put/append/get ...\n")
 
 	ck.Append("app", "x")
-	pv := ck.Append("app", "y")
-	if pv != "x" {
-		t.Fatalf("wrong Append return; expected %s got %s", "x", pv)
-	}
+	ck.Append("app", "y")
 	check(t, ck, "app", "xy")
 
 	ck.Put("a", "aa")
@@ -409,27 +406,18 @@ func TestUnreliable(t *testing.T) {
 				defer func() { ca[me] <- ok }()
 				myck := randclerk(kvh)
 				key := strconv.Itoa(me)
-				pv := myck.Get(key)
-				ov := myck.Append(key, "0")
-				if ov != pv {
-					t.Fatalf("wrong value; expected %s but got %s", pv, ov)
-				}
-				ov = myck.Append(key, "1")
-				pv = NextValue(pv, "0")
-				if ov != pv {
-					t.Fatalf("wrong value; expected %s but got %s", pv, ov)
-				}
-				ov = myck.Append(key, "2")
-				pv = NextValue(pv, "1")
-				if ov != pv {
-					t.Fatalf("wrong value; expected %s", pv)
-				}
-				nv := NextValue(pv, "2")
+				vv := myck.Get(key)
+				myck.Append(key, "0")
+				vv = NextValue(vv, "0")
+				myck.Append(key, "1")
+				vv = NextValue(vv, "1")
+				myck.Append(key, "2")
+				vv = NextValue(vv, "2")
 				time.Sleep(100 * time.Millisecond)
-				if myck.Get(key) != nv {
+				if myck.Get(key) != vv {
 					t.Fatalf("wrong value")
 				}
-				if myck.Get(key) != nv {
+				if myck.Get(key) != vv {
 					t.Fatalf("wrong value")
 				}
 				ok = true
@@ -690,11 +678,7 @@ func TestManyPartition(t *testing.T) {
 			for done == false {
 				if (rand.Int() % 1000) < 500 {
 					nv := strconv.Itoa(rand.Int())
-					v := myck.Append(key, nv)
-					if v != last {
-						t.Fatalf("%v: Append() wrong value, key %v, wanted %v, got %v",
-							cli, key, last, v)
-					}
+					myck.Append(key, nv)
 					last = NextValue(last, nv)
 				} else {
 					v := myck.Get(key)

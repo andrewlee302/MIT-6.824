@@ -71,15 +71,13 @@ func (ck *Clerk) Get(key string) string {
 //
 // shared by Put and Append.
 //
-func (ck *Clerk) PutAppend(key string, value string, op string) string {
+func (ck *Clerk) PutAppend(key string, value string, op string) {
 	// You will have to modify this function.
-	return ""
 }
 
 func (ck *Clerk) Put(key string, value string) {
 	ck.PutAppend(key, value, "Put")
 }
-func (ck *Clerk) Append(key string, value string) string {
-	v := ck.PutAppend(key, value, "Append")
-	return v
+func (ck *Clerk) Append(key string, value string) {
+	ck.PutAppend(key, value, "Append")
 }

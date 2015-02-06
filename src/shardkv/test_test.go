@@ -129,10 +129,7 @@ func TestBasic(t *testing.T) {
 	ck := tc.clerk()
 
 	ck.Put("a", "x")
-	v := ck.Append("a", "b")
-	if v != "x" {
-		t.Fatalf("Puthash got wrong value")
-	}
+	ck.Append("a", "b")
 	if ck.Get("a") != "xb" {
 		t.Fatalf("Get got wrong value")
 	}
@@ -323,13 +320,9 @@ func doConcurrent(t *testing.T, unreliable bool) {
 			last := ""
 			for iters := 0; iters < 3; iters++ {
 				nv := strconv.Itoa(rand.Int())
-				v := ck.Append(key, nv)
-				if v != last {
-					ok = false
-					t.Fatalf("Append(%v) expected %v got %v\n", key, last, v)
-				}
+				ck.Append(key, nv)
 				last = last + nv
-				v = ck.Get(key)
+				v := ck.Get(key)
 				if v != last {
 					ok = false
 					t.Fatalf("Get(%v) expected %v got %v\n", key, last, v)

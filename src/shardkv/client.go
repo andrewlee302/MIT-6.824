@@ -119,7 +119,7 @@ func (ck *Clerk) Get(key string) string {
 }
 
 // send a Put or Append request.
-func (ck *Clerk) PutAppend(key string, value string, op string) string {
+func (ck *Clerk) PutAppend(key string, value string, op string) {
 	ck.mu.Lock()
 	defer ck.mu.Unlock()
 
@@ -142,7 +142,7 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 				var reply PutAppendReply
 				ok := call(srv, "ShardKV.PutAppend", args, &reply)
 				if ok && reply.Err == OK {
-					return reply.PreviousValue
+					return
 				}
 				if ok && (reply.Err == ErrWrongGroup) {
 					break
@@ -160,7 +160,6 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 func (ck *Clerk) Put(key string, value string) {
 	ck.PutAppend(key, value, "Put")
 }
-func (ck *Clerk) Append(key string, value string) string {
-	v := ck.PutAppend(key, value, "Append")
-	return v
+func (ck *Clerk) Append(key string, value string) {
+	ck.PutAppend(key, value, "Append")
 }

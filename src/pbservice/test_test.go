@@ -64,9 +64,7 @@ func TestBasicFail(t *testing.T) {
 	ck.Append("ak", "hello")
 	check(ck, "ak", "hello")
 	ck.Put("ak", "xx")
-	if ck.Append("ak", "yy") != "xx" {
-		t.Fatal("Append wrong return")
-	}
+	ck.Append("ak", "yy")
 	check(ck, "ak", "xxyy")
 
 	fmt.Printf("  ... Passed\n")
@@ -207,10 +205,7 @@ func TestAtMostOnce(t *testing.T) {
 	val := ""
 	for i := 0; i < 100; i++ {
 		v := strconv.Itoa(i)
-		pv := ck.Append(k, v)
-		if pv != val {
-			t.Fatalf("ck.Append() returned %v but expected %v\n", pv, val)
-		}
+		ck.Append(k, v)
 		val = val + v
 	}
 
