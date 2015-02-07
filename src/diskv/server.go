@@ -213,10 +213,10 @@ func StartServer(gid int64, shardmasters []string,
 		for kv.dead == false {
 			conn, err := kv.l.Accept()
 			if err == nil && kv.dead == false {
-				if kv.Unreliable && (rand.Int63()%1000) < 25 {
+				if kv.Unreliable && (rand.Int63()%1000) < 100 {
 					// discard the request.
 					conn.Close()
-				} else if kv.Unreliable && (rand.Int63()%1000) < 50 {
+				} else if kv.Unreliable && (rand.Int63()%1000) < 200 {
 					// process the request but force discard of reply.
 					c1 := conn.(*net.UnixConn)
 					f, _ := c1.File()

@@ -720,7 +720,7 @@ func checkAppends(t *testing.T, v string, counts []int) {
 			}
 			off1 := strings.LastIndex(v, wanted)
 			if off1 != off {
-				t.Fatalf("duplicate element in Append result")
+				t.Fatalf("duplicate element %v %v in Append result", i, j)
 			}
 			if off <= lastoff {
 				t.Fatalf("wrong order for element in Append result")
@@ -823,6 +823,56 @@ func doConcurrentCrash(t *testing.T, unreliable bool) {
 func TestConcurrentCrashReliable(t *testing.T) {
 	fmt.Printf("Test: Concurrent Append and Crash ...\n")
 	doConcurrentCrash(t, false)
+	fmt.Printf("  ... Passed\n")
+}
+
+//
+// Append() at same time as crash.
+//
+func TestSimultaneous(t *testing.T) {
+	tc := setup(t, "simultaneous", 1, 3, true)
+	defer tc.cleanup()
+
+	tc.join(0)
+	ck := tc.clerk()
+
+	k1 := randstring(10)
+	ck.Put(k1, "")
+
+	ch := make(chan int)
+
+	ff := func(x int) {
+		ret := -1
+		defer func() { ch <- ret }()
+		myck := tc.clerk()
+		myck.Append(k1, "x "+strconv.Itoa(0)+" "+strconv.Itoa(x)+" y")
+		ret = 1
+	}
+
+	counts := []int{0}
+
+	for i := 0; i < 50; i++ {
+		go ff(i)
+
+		time.Sleep(time.Duration(rand.Int()%200) * time.Millisecond)
+		if (rand.Int() % 1000) < 500 {
+			tc.kill1(0, i%3, false)
+		} else {
+			tc.kill1(0, i%3, true)
+		}
+		time.Sleep(1000 * time.Millisecond)
+		vx := ck.Get(k1)
+		checkAppends(t, vx, counts)
+		tc.start1(0, i%3)
+		time.Sleep(1000 * time.Millisecond)
+
+		z := <-ch
+		if z != 1 {
+			t.Fatalf("Append thread failed")
+		}
+		counts[0] += z
+	}
+
 	fmt.Printf("  ... Passed\n")
 }
 

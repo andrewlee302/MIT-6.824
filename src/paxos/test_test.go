@@ -447,6 +447,53 @@ func TestForgetMem(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
+//
+// does Max() work after Done()s?
+//
+func TestDoneMax(t *testing.T) {
+	runtime.GOMAXPROCS(4)
+
+	fmt.Printf("Test: Paxos Max() after Done()s ...\n")
+
+	const npaxos = 3
+	var pxa []*Paxos = make([]*Paxos, npaxos)
+	var pxh []string = make([]string, npaxos)
+	defer cleanup(pxa)
+
+	for i := 0; i < npaxos; i++ {
+		pxh[i] = port("donemax", i)
+	}
+	for i := 0; i < npaxos; i++ {
+		pxa[i] = Make(pxh, i, nil)
+	}
+
+	pxa[0].Start(0, "x")
+	waitn(t, pxa, 0, npaxos)
+
+	for i := 1; i <= 10; i++ {
+		pxa[0].Start(i, "y")
+		waitn(t, pxa, i, npaxos)
+	}
+
+	for i := 0; i < npaxos; i++ {
+		pxa[i].Done(10)
+	}
+
+	// Propagate messages so everyone knows about Done(10)
+	for i := 0; i < npaxos; i++ {
+		pxa[i].Start(10, "z")
+	}
+	time.Sleep(2 * time.Second)
+	for i := 0; i < npaxos; i++ {
+		mx := pxa[i].Max()
+		if mx != 10 {
+			t.Fatalf("Max() did not return correct result %d after calling Done(); returned %d", 10, mx)
+		}
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
 func TestRPCCount(t *testing.T) {
 	runtime.GOMAXPROCS(4)
 
