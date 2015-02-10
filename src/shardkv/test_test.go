@@ -119,7 +119,7 @@ func setup(t *testing.T, tag string, unreliable bool) *tCluster {
 }
 
 func TestBasic(t *testing.T) {
-	tc := setup(t, "basicpersistence", false)
+	tc := setup(t, "basic", false)
 	defer tc.cleanup()
 
 	fmt.Printf("Test: Basic Join/Leave ...\n")
@@ -176,7 +176,7 @@ func TestBasic(t *testing.T) {
 }
 
 func TestMove(t *testing.T) {
-	tc := setup(t, "basicpersistence", false)
+	tc := setup(t, "move", false)
 	defer tc.cleanup()
 
 	fmt.Printf("Test: Shards really move ...\n")
@@ -233,7 +233,7 @@ func TestMove(t *testing.T) {
 }
 
 func TestLimp(t *testing.T) {
-	tc := setup(t, "basicpersistence", false)
+	tc := setup(t, "limp", false)
 	defer tc.cleanup()
 
 	fmt.Printf("Test: Reconfiguration with some dead replicas ...\n")
@@ -300,7 +300,7 @@ func TestLimp(t *testing.T) {
 }
 
 func doConcurrent(t *testing.T, unreliable bool) {
-	tc := setup(t, "basicpersistence", false)
+	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), false)
 	defer tc.cleanup()
 
 	for i := 0; i < len(tc.groups); i++ {

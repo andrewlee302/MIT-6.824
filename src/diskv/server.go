@@ -181,7 +181,6 @@ func (kv *DisKV) kill() {
 //
 func StartServer(gid int64, shardmasters []string,
 	servers []string, me int, dir string, restart bool) *DisKV {
-	gob.Register(Op{})
 
 	kv := new(DisKV)
 	kv.me = me
@@ -192,10 +191,16 @@ func StartServer(gid int64, shardmasters []string,
 	// Your initialization code here.
 	// Don't call Join().
 
+	// log.SetOutput(ioutil.Discard)
+
+	gob.Register(Op{})
+
 	rpcs := rpc.NewServer()
 	rpcs.Register(kv)
 
 	kv.px = paxos.Make(servers, me, rpcs)
+
+	// log.SetOutput(os.Stdout)
 
 
 

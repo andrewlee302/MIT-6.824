@@ -67,8 +67,6 @@ func (sm *ShardMaster) Kill() {
 // me is the index of the current server in servers[].
 //
 func StartServer(servers []string, me int) *ShardMaster {
-	gob.Register(Op{})
-
 	sm := new(ShardMaster)
 	sm.me = me
 
@@ -76,8 +74,9 @@ func StartServer(servers []string, me int) *ShardMaster {
 	sm.configs[0].Groups = map[int64][]string{}
 
 	rpcs := rpc.NewServer()
-	rpcs.Register(sm)
 
+	gob.Register(Op{})
+	rpcs.Register(sm)
 	sm.px = paxos.Make(servers, me, rpcs)
 
 	os.Remove(servers[me])

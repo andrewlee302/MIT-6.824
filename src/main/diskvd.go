@@ -64,7 +64,8 @@ func main() {
 	srv := diskv.StartServer(gid, masters, replicas, me, dir, restart)
 	srv.Unreliable = unreliable
 
-	// for safety, quit after 10 minutes.
+	// for safety, force quit after 10 minutes.
 	time.Sleep(10 * 60 * time.Second)
-	os.Exit(0)
+	mep, _ := os.FindProcess(os.Getpid())
+	mep.Kill()
 }

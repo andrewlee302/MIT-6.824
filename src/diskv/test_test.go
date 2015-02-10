@@ -10,6 +10,8 @@ import "os/exec"
 import "time"
 import "fmt"
 import "sync"
+import "io/ioutil"
+import "log"
 import "math/rand"
 import crand "crypto/rand"
 import "encoding/base64"
@@ -157,8 +159,8 @@ func (tc *tCluster) leave(gi int) {
 // how many total bytes of file space in use?
 func (tc *tCluster) space() int64 {
 	var bytes int64 = 0
-	ff := func(_ string, info os.FileInfo, _ error) error {
-		if info.Mode().IsDir() == false {
+	ff := func(_ string, info os.FileInfo, err error) error {
+		if err == nil && info.Mode().IsDir() == false {
 			bytes += info.Size()
 		}
 		return nil
@@ -197,9 +199,11 @@ func setup(t *testing.T, tag string, ngroups int, nreplicas int, unreliable bool
 	for i := 0; i < nmasters; i++ {
 		tc.masterports[i] = tc.newport()
 	}
+	log.SetOutput(ioutil.Discard) // suppress method errors &c
 	for i := 0; i < nmasters; i++ {
 		tc.masters[i] = shardmaster.StartServer(tc.masterports, i)
 	}
+	log.SetOutput(os.Stdout) // re-enable error output.
 	tc.mck = tc.shardclerk()
 
 	tc.groups = make([]*tGroup, ngroups)
@@ -393,7 +397,7 @@ func TestDiskUse(t *testing.T) {
 	// let all the replicas tick().
 	time.Sleep(1100 * time.Millisecond)
 
-	max := int64(13 * 1000)
+	max := int64(20 * 1000)
 
 	{
 		nb := tc.space()
@@ -833,6 +837,8 @@ func TestSimultaneous(t *testing.T) {
 	tc := setup(t, "simultaneous", 1, 3, true)
 	defer tc.cleanup()
 
+	fmt.Printf("Test: Simultaneous Append and Crash ...\n")
+
 	tc.join(0)
 	ck := tc.clerk()
 
@@ -871,6 +877,249 @@ func TestSimultaneous(t *testing.T) {
 			t.Fatalf("Append thread failed")
 		}
 		counts[0] += z
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
+//
+// recovery with mixture of lost disks and simple reboot.
+// does a replica that loses its disk wait for majority?
+//
+func TestRejoinMix1(t *testing.T) {
+	tc := setup(t, "rejoinmix1", 1, 5, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: replica waits correctly after disk loss ...\n")
+
+	tc.join(0)
+	ck := tc.clerk()
+
+	k1 := randstring(10)
+	k1v := ""
+
+	for i := 0; i < 7+(rand.Int()%7); i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	time.Sleep(300 * time.Millisecond)
+	ck.Get(k1)
+
+	tc.kill1(0, 0, false)
+
+	for i := 0; i < 2; i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	time.Sleep(300 * time.Millisecond)
+	ck.Get(k1)
+	time.Sleep(300 * time.Millisecond)
+
+	tc.kill1(0, 1, true)
+	tc.kill1(0, 2, true)
+
+	tc.kill1(0, 3, false)
+	tc.kill1(0, 4, false)
+
+	tc.start1(0, 0)
+	tc.start1(0, 1)
+	tc.start1(0, 2)
+	time.Sleep(300 * time.Millisecond)
+
+	// check that requests are not executed.
+	ch := make(chan string)
+	go func() {
+		ck1 := tc.clerk()
+		v := ck1.Get(k1)
+		ch <- v
+	}()
+	timeout := make(chan bool)
+	go func() { time.Sleep(3 * time.Second); timeout <- true }()
+	select {
+	case <-ch:
+		t.Fatalf("Get should not have succeeded.")
+	case <-timeout:
+		// this is what we hope for.
+	}
+
+	tc.start1(0, 3)
+	tc.start1(0, 4)
+
+	{
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	v := ck.Get(k1)
+	if v != k1v {
+		t.Fatalf("Get returned wrong value")
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
+//
+// does a replica that loses its state continue once it has
+// seen a bare majority?
+//
+func TestRejoinMix2(t *testing.T) {
+	tc := setup(t, "rejoinmix2", 1, 3, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: replica continues correctly after disk loss ...\n")
+
+	tc.join(0)
+	ck := tc.clerk()
+
+	k1 := randstring(10)
+	k1v := ""
+
+	for i := 0; i < 7+(rand.Int()%7); i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	time.Sleep(300 * time.Millisecond)
+	ck.Get(k1)
+
+	tc.kill1(0, 0, false)
+
+	// R1 and R2 are up.
+	for i := 0; i < 2; i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	// R1 loses its disk, R0 still down.
+	tc.kill1(0, 1, true)
+
+	// R2 down.
+	tc.kill1(0, 2, false)
+
+	// R0 and R1 up.
+	tc.start1(0, 0)
+	tc.start1(0, 1)
+
+	// check that requests are not executed.
+	// R0 is up, R1 is up but lost disk,
+	// R2 is down.
+	ch := make(chan string)
+	go func() {
+		ck1 := tc.clerk()
+		v := ck1.Get(k1)
+		ch <- v
+	}()
+	timeout := make(chan bool)
+	go func() { time.Sleep(3 * time.Second); timeout <- true }()
+	select {
+	case <-ch:
+		t.Fatalf("Get should not have succeeded.")
+	case <-timeout:
+		// this is what we hope for.
+	}
+
+	// stop R0, start R2.
+	tc.kill1(0, 0, false)
+	tc.start1(0, 2)
+
+	// now R1, which had lost its disk, has had a chance
+	// to contact both R2 and R0, which preserved their disks,
+	// though it talked to them at different times.
+	// and R2 is up with an intact and up-to-date disk.
+	// at this point R1 and R2 should be willing to proceed.
+
+	{
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+		v := ck.Get(k1)
+		if v != k1v {
+			t.Fatalf("Get returned wrong value")
+		}
+	}
+
+	tc.start1(0, 0)
+
+	time.Sleep(time.Second)
+	{
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+		v := ck.Get(k1)
+		if v != k1v {
+			t.Fatalf("Get returned wrong value")
+		}
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
+//
+// does a replica that loses its state avoid
+// changing its mind about Paxos agreements?
+//
+func TestRejoinMix3(t *testing.T) {
+	tc := setup(t, "rejoinmix3", 1, 5, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: replica Paxos resumes correctly after disk loss ...\n")
+
+	tc.join(0)
+	ck := tc.clerk()
+
+	k1 := randstring(10)
+	k1v := ""
+
+	for i := 0; i < 7+(rand.Int()%7); i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	time.Sleep(300 * time.Millisecond)
+	ck.Get(k1)
+
+	// kill R1, R2.
+	tc.kill1(0, 1, false)
+	tc.kill1(0, 2, false)
+
+	// R0, R3, and R4 are up.
+	for i := 0; i < 100+(rand.Int()%7); i++ {
+		x := randstring(10)
+		ck.Append(k1, x)
+		k1v += x
+	}
+
+	// kill R0, lose disk.
+	tc.kill1(0, 0, true)
+
+	time.Sleep(50 * time.Millisecond)
+
+	// restart R1, R2, R0.
+	tc.start1(0, 1)
+	tc.start1(0, 2)
+	time.Sleep(1 * time.Millisecond)
+	tc.start1(0, 0)
+
+	chx := make(chan bool)
+	x1 := randstring(10)
+	x2 := randstring(10)
+	go func() { ck.Append(k1, x1); chx <- true }()
+	time.Sleep(10 * time.Millisecond)
+	go func() { ck.Append(k1, x2); chx <- true }()
+
+	xv := ck.Get(k1)
+	if xv == k1v+x1+x2 || xv == k1v+x2+x1 {
+		// ok
+	} else {
+		t.Fatalf("wrong value")
 	}
 
 	fmt.Printf("  ... Passed\n")
@@ -1061,7 +1310,7 @@ func TestLimp(t *testing.T) {
 }
 
 func doConcurrent(t *testing.T, unreliable bool) {
-	tc := setup(t, "concurrent", 3, 3, unreliable)
+	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), 3, 3, unreliable)
 	defer tc.cleanup()
 
 	for i := 0; i < len(tc.groups); i++ {
