@@ -231,6 +231,252 @@ func setup(t *testing.T, tag string, ngroups int, nreplicas int, unreliable bool
 }
 
 //
+// these tests are the same as in Lab 4.
+//
+
+func TestBasic(t *testing.T) {
+	tc := setup(t, "basic", 3, 3, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: Basic Join/Leave (lab4) ...\n")
+
+	tc.join(0)
+
+	ck := tc.clerk()
+
+	ck.Put("a", "x")
+	ck.Append("a", "b")
+	if ck.Get("a") != "xb" {
+		t.Fatalf("wrong value")
+	}
+
+	keys := make([]string, 10)
+	vals := make([]string, len(keys))
+	for i := 0; i < len(keys); i++ {
+		keys[i] = strconv.Itoa(rand.Int())
+		vals[i] = strconv.Itoa(rand.Int())
+		ck.Put(keys[i], vals[i])
+	}
+
+	// are keys still there after joins?
+	for gi := 1; gi < len(tc.groups); gi++ {
+		tc.join(gi)
+		time.Sleep(1 * time.Second)
+		for i := 0; i < len(keys); i++ {
+			v := ck.Get(keys[i])
+			if v != vals[i] {
+				t.Fatalf("joining; wrong value; g=%v k=%v wanted=%v got=%v",
+					gi, keys[i], vals[i], v)
+			}
+			vals[i] = strconv.Itoa(rand.Int())
+			ck.Put(keys[i], vals[i])
+		}
+	}
+
+	// are keys still there after leaves?
+	for gi := 0; gi < len(tc.groups)-1; gi++ {
+		tc.leave(gi)
+		time.Sleep(1 * time.Second)
+		for i := 0; i < len(keys); i++ {
+			v := ck.Get(keys[i])
+			if v != vals[i] {
+				t.Fatalf("leaving; wrong value; g=%v k=%v wanted=%v got=%v",
+					gi, keys[i], vals[i], v)
+			}
+			vals[i] = strconv.Itoa(rand.Int())
+			ck.Put(keys[i], vals[i])
+		}
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
+func TestMove(t *testing.T) {
+	tc := setup(t, "move", 3, 3, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: Shards really move (lab4) ...\n")
+
+	tc.join(0)
+
+	ck := tc.clerk()
+
+	// insert one key per shard
+	for i := 0; i < shardmaster.NShards; i++ {
+		ck.Put(string('0'+i), string('0'+i))
+	}
+
+	// add group 1.
+	tc.join(1)
+	time.Sleep(5 * time.Second)
+
+	// check that keys are still there.
+	for i := 0; i < shardmaster.NShards; i++ {
+		if ck.Get(string('0'+i)) != string('0'+i) {
+			t.Fatalf("missing key/value")
+		}
+	}
+
+	// remove sockets from group 0.
+	for _, s := range tc.groups[0].servers {
+		os.Remove(s.port)
+	}
+
+	count := 0
+	var mu sync.Mutex
+	for i := 0; i < shardmaster.NShards; i++ {
+		go func(me int) {
+			myck := tc.clerk()
+			v := myck.Get(string('0' + me))
+			if v == string('0'+me) {
+				mu.Lock()
+				count++
+				mu.Unlock()
+			} else {
+				t.Fatalf("Get(%v) yielded %v\n", me, v)
+			}
+		}(i)
+	}
+
+	time.Sleep(10 * time.Second)
+
+	if count > shardmaster.NShards/3 && count < 2*(shardmaster.NShards/3) {
+		fmt.Printf("  ... Passed\n")
+	} else {
+		t.Fatalf("%v keys worked after killing 1/2 of groups; wanted %v",
+			count, shardmaster.NShards/2)
+	}
+}
+
+func TestLimp(t *testing.T) {
+	tc := setup(t, "limp", 3, 3, false)
+	defer tc.cleanup()
+
+	fmt.Printf("Test: Reconfiguration with some dead replicas (lab4) ...\n")
+
+	tc.join(0)
+
+	ck := tc.clerk()
+
+	ck.Put("a", "b")
+	if ck.Get("a") != "b" {
+		t.Fatalf("got wrong value")
+	}
+
+	// kill one server from each replica group.
+	for gi := 0; gi < len(tc.groups); gi++ {
+		sa := tc.groups[gi].servers
+		tc.kill1(gi, rand.Int()%len(sa), false)
+	}
+
+	keys := make([]string, 10)
+	vals := make([]string, len(keys))
+	for i := 0; i < len(keys); i++ {
+		keys[i] = strconv.Itoa(rand.Int())
+		vals[i] = strconv.Itoa(rand.Int())
+		ck.Put(keys[i], vals[i])
+	}
+
+	// are keys still there after joins?
+	for gi := 1; gi < len(tc.groups); gi++ {
+		tc.join(gi)
+		time.Sleep(1 * time.Second)
+		for i := 0; i < len(keys); i++ {
+			v := ck.Get(keys[i])
+			if v != vals[i] {
+				t.Fatalf("joining; wrong value; g=%v k=%v wanted=%v got=%v",
+					gi, keys[i], vals[i], v)
+			}
+			vals[i] = strconv.Itoa(rand.Int())
+			ck.Put(keys[i], vals[i])
+		}
+	}
+
+	// are keys still there after leaves?
+	for gi := 0; gi < len(tc.groups)-1; gi++ {
+		tc.leave(gi)
+		time.Sleep(2 * time.Second)
+		g := tc.groups[gi]
+		for i := 0; i < len(g.servers); i++ {
+			tc.kill1(gi, i, false)
+		}
+		for i := 0; i < len(keys); i++ {
+			v := ck.Get(keys[i])
+			if v != vals[i] {
+				t.Fatalf("leaving; wrong value; g=%v k=%v wanted=%v got=%v",
+					g, keys[i], vals[i], v)
+			}
+			vals[i] = strconv.Itoa(rand.Int())
+			ck.Put(keys[i], vals[i])
+		}
+	}
+
+	fmt.Printf("  ... Passed\n")
+}
+
+func doConcurrent(t *testing.T, unreliable bool) {
+	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), 3, 3, unreliable)
+	defer tc.cleanup()
+
+	for i := 0; i < len(tc.groups); i++ {
+		tc.join(i)
+	}
+
+	const npara = 11
+	var ca [npara]chan bool
+	for i := 0; i < npara; i++ {
+		ca[i] = make(chan bool)
+		go func(me int) {
+			ok := true
+			defer func() { ca[me] <- ok }()
+			ck := tc.clerk()
+			mymck := tc.shardclerk()
+			key := strconv.Itoa(me)
+			last := ""
+			for iters := 0; iters < 3; iters++ {
+				nv := strconv.Itoa(rand.Int())
+				ck.Append(key, nv)
+				last = last + nv
+				v := ck.Get(key)
+				if v != last {
+					ok = false
+					t.Fatalf("Get(%v) expected %v got %v\n", key, last, v)
+				}
+
+				gi := rand.Int() % len(tc.groups)
+				gid := tc.groups[gi].gid
+				mymck.Move(rand.Int()%shardmaster.NShards, gid)
+
+				time.Sleep(time.Duration(rand.Int()%30) * time.Millisecond)
+			}
+		}(i)
+	}
+
+	for i := 0; i < npara; i++ {
+		x := <-ca[i]
+		if x == false {
+			t.Fatalf("something is wrong")
+		}
+	}
+}
+
+func TestConcurrent(t *testing.T) {
+	fmt.Printf("Test: Concurrent Put/Get/Move (lab4) ...\n")
+	doConcurrent(t, false)
+	fmt.Printf("  ... Passed\n")
+}
+
+func TestConcurrentUnreliable(t *testing.T) {
+	fmt.Printf("Test: Concurrent Put/Get/Move (unreliable) (lab4) ...\n")
+	doConcurrent(t, true)
+	fmt.Printf("  ... Passed\n")
+}
+
+//
+// the rest of the tests are lab5-specific.
+//
+
+//
 // do the servers write k/v pairs to disk, so that they
 // are still available after kill+restart?
 //
@@ -519,14 +765,14 @@ func TestAppendUse(t *testing.T) {
 	}
 	time.Sleep(time.Second)
 
-	if ck.Get(k1) != k1v {
-		t.Fatalf("wrong value for k1")
+	if ck.Get(k3) != k3v {
+		t.Fatalf("wrong value for k3")
 	}
 	if ck.Get(k2) != k2v {
 		t.Fatalf("wrong value for k2")
 	}
-	if ck.Get(k3) != k3v {
-		t.Fatalf("wrong value for k3")
+	if ck.Get(k1) != k1v {
+		t.Fatalf("wrong value for k1")
 	}
 
 	{
@@ -1115,6 +1361,9 @@ func TestRejoinMix3(t *testing.T) {
 	time.Sleep(10 * time.Millisecond)
 	go func() { ck.Append(k1, x2); chx <- true }()
 
+	<-chx
+	<-chx
+
 	xv := ck.Get(k1)
 	if xv == k1v+x1+x2 || xv == k1v+x2+x1 {
 		// ok
@@ -1122,247 +1371,5 @@ func TestRejoinMix3(t *testing.T) {
 		t.Fatalf("wrong value")
 	}
 
-	fmt.Printf("  ... Passed\n")
-}
-
-//
-// the rest of the tests are the same as in Lab 4.
-//
-
-func TestBasic(t *testing.T) {
-	tc := setup(t, "basic", 3, 3, false)
-	defer tc.cleanup()
-
-	fmt.Printf("Test: Basic Join/Leave (lab4) ...\n")
-
-	tc.join(0)
-
-	ck := tc.clerk()
-
-	ck.Put("a", "x")
-	ck.Append("a", "b")
-	if ck.Get("a") != "xb" {
-		t.Fatalf("wrong value")
-	}
-
-	keys := make([]string, 10)
-	vals := make([]string, len(keys))
-	for i := 0; i < len(keys); i++ {
-		keys[i] = strconv.Itoa(rand.Int())
-		vals[i] = strconv.Itoa(rand.Int())
-		ck.Put(keys[i], vals[i])
-	}
-
-	// are keys still there after joins?
-	for gi := 1; gi < len(tc.groups); gi++ {
-		tc.join(gi)
-		time.Sleep(1 * time.Second)
-		for i := 0; i < len(keys); i++ {
-			v := ck.Get(keys[i])
-			if v != vals[i] {
-				t.Fatalf("joining; wrong value; g=%v k=%v wanted=%v got=%v",
-					gi, keys[i], vals[i], v)
-			}
-			vals[i] = strconv.Itoa(rand.Int())
-			ck.Put(keys[i], vals[i])
-		}
-	}
-
-	// are keys still there after leaves?
-	for gi := 0; gi < len(tc.groups)-1; gi++ {
-		tc.leave(gi)
-		time.Sleep(1 * time.Second)
-		for i := 0; i < len(keys); i++ {
-			v := ck.Get(keys[i])
-			if v != vals[i] {
-				t.Fatalf("leaving; wrong value; g=%v k=%v wanted=%v got=%v",
-					gi, keys[i], vals[i], v)
-			}
-			vals[i] = strconv.Itoa(rand.Int())
-			ck.Put(keys[i], vals[i])
-		}
-	}
-
-	fmt.Printf("  ... Passed\n")
-}
-
-func TestMove(t *testing.T) {
-	tc := setup(t, "move", 3, 3, false)
-	defer tc.cleanup()
-
-	fmt.Printf("Test: Shards really move (lab4) ...\n")
-
-	tc.join(0)
-
-	ck := tc.clerk()
-
-	// insert one key per shard
-	for i := 0; i < shardmaster.NShards; i++ {
-		ck.Put(string('0'+i), string('0'+i))
-	}
-
-	// add group 1.
-	tc.join(1)
-	time.Sleep(5 * time.Second)
-
-	// check that keys are still there.
-	for i := 0; i < shardmaster.NShards; i++ {
-		if ck.Get(string('0'+i)) != string('0'+i) {
-			t.Fatalf("missing key/value")
-		}
-	}
-
-	// remove sockets from group 0.
-	for _, s := range tc.groups[0].servers {
-		os.Remove(s.port)
-	}
-
-	count := 0
-	var mu sync.Mutex
-	for i := 0; i < shardmaster.NShards; i++ {
-		go func(me int) {
-			myck := tc.clerk()
-			v := myck.Get(string('0' + me))
-			if v == string('0'+me) {
-				mu.Lock()
-				count++
-				mu.Unlock()
-			} else {
-				t.Fatalf("Get(%v) yielded %v\n", me, v)
-			}
-		}(i)
-	}
-
-	time.Sleep(10 * time.Second)
-
-	if count > shardmaster.NShards/3 && count < 2*(shardmaster.NShards/3) {
-		fmt.Printf("  ... Passed\n")
-	} else {
-		t.Fatalf("%v keys worked after killing 1/2 of groups; wanted %v",
-			count, shardmaster.NShards/2)
-	}
-}
-
-func TestLimp(t *testing.T) {
-	tc := setup(t, "limp", 3, 3, false)
-	defer tc.cleanup()
-
-	fmt.Printf("Test: Reconfiguration with some dead replicas (lab4) ...\n")
-
-	tc.join(0)
-
-	ck := tc.clerk()
-
-	ck.Put("a", "b")
-	if ck.Get("a") != "b" {
-		t.Fatalf("got wrong value")
-	}
-
-	// kill one server from each replica group.
-	for gi := 0; gi < len(tc.groups); gi++ {
-		sa := tc.groups[gi].servers
-		tc.kill1(gi, rand.Int()%len(sa), false)
-	}
-
-	keys := make([]string, 10)
-	vals := make([]string, len(keys))
-	for i := 0; i < len(keys); i++ {
-		keys[i] = strconv.Itoa(rand.Int())
-		vals[i] = strconv.Itoa(rand.Int())
-		ck.Put(keys[i], vals[i])
-	}
-
-	// are keys still there after joins?
-	for gi := 1; gi < len(tc.groups); gi++ {
-		tc.join(gi)
-		time.Sleep(1 * time.Second)
-		for i := 0; i < len(keys); i++ {
-			v := ck.Get(keys[i])
-			if v != vals[i] {
-				t.Fatalf("joining; wrong value; g=%v k=%v wanted=%v got=%v",
-					gi, keys[i], vals[i], v)
-			}
-			vals[i] = strconv.Itoa(rand.Int())
-			ck.Put(keys[i], vals[i])
-		}
-	}
-
-	// are keys still there after leaves?
-	for gi := 0; gi < len(tc.groups)-1; gi++ {
-		tc.leave(gi)
-		time.Sleep(2 * time.Second)
-		g := tc.groups[gi]
-		for i := 0; i < len(g.servers); i++ {
-			tc.kill1(gi, i, false)
-		}
-		for i := 0; i < len(keys); i++ {
-			v := ck.Get(keys[i])
-			if v != vals[i] {
-				t.Fatalf("leaving; wrong value; g=%v k=%v wanted=%v got=%v",
-					g, keys[i], vals[i], v)
-			}
-			vals[i] = strconv.Itoa(rand.Int())
-			ck.Put(keys[i], vals[i])
-		}
-	}
-
-	fmt.Printf("  ... Passed\n")
-}
-
-func doConcurrent(t *testing.T, unreliable bool) {
-	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), 3, 3, unreliable)
-	defer tc.cleanup()
-
-	for i := 0; i < len(tc.groups); i++ {
-		tc.join(i)
-	}
-
-	const npara = 11
-	var ca [npara]chan bool
-	for i := 0; i < npara; i++ {
-		ca[i] = make(chan bool)
-		go func(me int) {
-			ok := true
-			defer func() { ca[me] <- ok }()
-			ck := tc.clerk()
-			mymck := tc.shardclerk()
-			key := strconv.Itoa(me)
-			last := ""
-			for iters := 0; iters < 3; iters++ {
-				nv := strconv.Itoa(rand.Int())
-				ck.Append(key, nv)
-				last = last + nv
-				v := ck.Get(key)
-				if v != last {
-					ok = false
-					t.Fatalf("Get(%v) expected %v got %v\n", key, last, v)
-				}
-
-				gi := rand.Int() % len(tc.groups)
-				gid := tc.groups[gi].gid
-				mymck.Move(rand.Int()%shardmaster.NShards, gid)
-
-				time.Sleep(time.Duration(rand.Int()%30) * time.Millisecond)
-			}
-		}(i)
-	}
-
-	for i := 0; i < npara; i++ {
-		x := <-ca[i]
-		if x == false {
-			t.Fatalf("something is wrong")
-		}
-	}
-}
-
-func TestConcurrent(t *testing.T) {
-	fmt.Printf("Test: Concurrent Put/Get/Move (lab4) ...\n")
-	doConcurrent(t, false)
-	fmt.Printf("  ... Passed\n")
-}
-
-func TestConcurrentUnreliable(t *testing.T) {
-	fmt.Printf("Test: Concurrent Put/Get/Move (unreliable) (lab4) ...\n")
-	doConcurrent(t, true)
 	fmt.Printf("  ... Passed\n")
 }
