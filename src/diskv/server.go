@@ -177,7 +177,7 @@ func (kv *DisKV) kill() {
 //   each replica is passed a different directory.
 // restart is false the very first time this server
 //   is started, and true to indicate a re-start
-//   after a crash.
+//   after a crash or after a crash with disk loss.
 //
 func StartServer(gid int64, shardmasters []string,
 	servers []string, me int, dir string, restart bool) *DisKV {

@@ -234,7 +234,7 @@ func setup(t *testing.T, tag string, ngroups int, nreplicas int, unreliable bool
 // these tests are the same as in Lab 4.
 //
 
-func TestBasic(t *testing.T) {
+func Test4Basic(t *testing.T) {
 	tc := setup(t, "basic", 3, 3, false)
 	defer tc.cleanup()
 
@@ -291,7 +291,7 @@ func TestBasic(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 }
 
-func TestMove(t *testing.T) {
+func Test4Move(t *testing.T) {
 	tc := setup(t, "move", 3, 3, false)
 	defer tc.cleanup()
 
@@ -348,7 +348,7 @@ func TestMove(t *testing.T) {
 	}
 }
 
-func TestLimp(t *testing.T) {
+func Test4Limp(t *testing.T) {
 	tc := setup(t, "limp", 3, 3, false)
 	defer tc.cleanup()
 
@@ -460,13 +460,13 @@ func doConcurrent(t *testing.T, unreliable bool) {
 	}
 }
 
-func TestConcurrent(t *testing.T) {
+func Test4Concurrent(t *testing.T) {
 	fmt.Printf("Test: Concurrent Put/Get/Move (lab4) ...\n")
 	doConcurrent(t, false)
 	fmt.Printf("  ... Passed\n")
 }
 
-func TestConcurrentUnreliable(t *testing.T) {
+func Test4ConcurrentUnreliable(t *testing.T) {
 	fmt.Printf("Test: Concurrent Put/Get/Move (unreliable) (lab4) ...\n")
 	doConcurrent(t, true)
 	fmt.Printf("  ... Passed\n")
@@ -480,7 +480,7 @@ func TestConcurrentUnreliable(t *testing.T) {
 // do the servers write k/v pairs to disk, so that they
 // are still available after kill+restart?
 //
-func TestBasicPersistence(t *testing.T) {
+func Test5BasicPersistence(t *testing.T) {
 	tc := setup(t, "basicpersistence", 1, 3, false)
 	defer tc.cleanup()
 
@@ -539,7 +539,7 @@ func TestBasicPersistence(t *testing.T) {
 // if server S1 is dead for a bit, and others accept operations,
 // do they bring S1 up to date correctly after it restarts?
 //
-func TestOneRestart(t *testing.T) {
+func Test5OneRestart(t *testing.T) {
 	tc := setup(t, "onerestart", 1, 3, false)
 	defer tc.cleanup()
 
@@ -594,7 +594,7 @@ func TestOneRestart(t *testing.T) {
 //
 // check that the persistent state isn't too big.
 //
-func TestDiskUse(t *testing.T) {
+func Test5DiskUse(t *testing.T) {
 	tc := setup(t, "diskuse", 1, 3, false)
 	defer tc.cleanup()
 
@@ -691,7 +691,7 @@ func TestDiskUse(t *testing.T) {
 //
 // check that the persistent state isn't too big for Appends.
 //
-func TestAppendUse(t *testing.T) {
+func Test5AppendUse(t *testing.T) {
 	tc := setup(t, "appenduse", 1, 3, false)
 	defer tc.cleanup()
 
@@ -768,9 +768,11 @@ func TestAppendUse(t *testing.T) {
 	if ck.Get(k3) != k3v {
 		t.Fatalf("wrong value for k3")
 	}
+	time.Sleep(100 * time.Millisecond)
 	if ck.Get(k2) != k2v {
 		t.Fatalf("wrong value for k2")
 	}
+	time.Sleep(1100 * time.Millisecond)
 	if ck.Get(k1) != k1v {
 		t.Fatalf("wrong value for k1")
 	}
@@ -788,7 +790,7 @@ func TestAppendUse(t *testing.T) {
 //
 // recovery if a single replica loses disk content.
 //
-func TestOneLostDisk(t *testing.T) {
+func Test5OneLostDisk(t *testing.T) {
 	tc := setup(t, "onelostdisk", 1, 3, false)
 	defer tc.cleanup()
 
@@ -867,7 +869,7 @@ func TestOneLostDisk(t *testing.T) {
 //
 // one disk lost while another replica is merely down.
 //
-func TestOneLostOneDown(t *testing.T) {
+func Test5OneLostOneDown(t *testing.T) {
 	tc := setup(t, "onelostonedown", 1, 5, false)
 	defer tc.cleanup()
 
@@ -1070,7 +1072,7 @@ func doConcurrentCrash(t *testing.T, unreliable bool) {
 	}
 }
 
-func TestConcurrentCrashReliable(t *testing.T) {
+func Test5ConcurrentCrashReliable(t *testing.T) {
 	fmt.Printf("Test: Concurrent Append and Crash ...\n")
 	doConcurrentCrash(t, false)
 	fmt.Printf("  ... Passed\n")
@@ -1079,7 +1081,7 @@ func TestConcurrentCrashReliable(t *testing.T) {
 //
 // Append() at same time as crash.
 //
-func TestSimultaneous(t *testing.T) {
+func Test5Simultaneous(t *testing.T) {
 	tc := setup(t, "simultaneous", 1, 3, true)
 	defer tc.cleanup()
 
@@ -1132,7 +1134,7 @@ func TestSimultaneous(t *testing.T) {
 // recovery with mixture of lost disks and simple reboot.
 // does a replica that loses its disk wait for majority?
 //
-func TestRejoinMix1(t *testing.T) {
+func Test5RejoinMix1(t *testing.T) {
 	tc := setup(t, "rejoinmix1", 1, 5, false)
 	defer tc.cleanup()
 
@@ -1213,7 +1215,7 @@ func TestRejoinMix1(t *testing.T) {
 // does a replica that loses its state continue once it has
 // seen a bare majority?
 //
-func TestRejoinMix2(t *testing.T) {
+func Test5RejoinMix2(t *testing.T) {
 	tc := setup(t, "rejoinmix2", 1, 3, false)
 	defer tc.cleanup()
 
@@ -1311,7 +1313,7 @@ func TestRejoinMix2(t *testing.T) {
 // does a replica that loses its state avoid
 // changing its mind about Paxos agreements?
 //
-func TestRejoinMix3(t *testing.T) {
+func Test5RejoinMix3(t *testing.T) {
 	tc := setup(t, "rejoinmix3", 1, 5, false)
 	defer tc.cleanup()
 
