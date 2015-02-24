@@ -38,9 +38,9 @@ import "math/rand"
 type Fate int
 
 const (
-	Decided   Fate = 1
-	Pending        = 2 // not yet decided.
-	Forgotten      = 3 // decided but forgotten.
+	Decided   Fate = iota + 1
+	Pending        // not yet decided.
+	Forgotten      // decided but forgotten.
 )
 
 type Paxos struct {

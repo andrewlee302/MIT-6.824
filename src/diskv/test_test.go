@@ -659,7 +659,7 @@ func Test5DiskUse(t *testing.T) {
 	{
 		nb := tc.space()
 		if nb > max {
-			t.Fatalf("using too many bytes on disk (%v)", nb)
+			t.Fatalf("using too many bytes on disk (%v > %v)", nb, max)
 		}
 	}
 
@@ -681,7 +681,7 @@ func Test5DiskUse(t *testing.T) {
 	{
 		nb := tc.space()
 		if nb > max {
-			t.Fatalf("using too many bytes on disk (%v)", nb)
+			t.Fatalf("using too many bytes on disk (%v > %v)", nb, max)
 		}
 	}
 
@@ -1206,104 +1206,6 @@ func Test5RejoinMix1(t *testing.T) {
 	v := ck.Get(k1)
 	if v != k1v {
 		t.Fatalf("Get returned wrong value")
-	}
-
-	fmt.Printf("  ... Passed\n")
-}
-
-//
-// does a replica that loses its state continue once it has
-// seen a bare majority?
-//
-func Test5RejoinMix2(t *testing.T) {
-	tc := setup(t, "rejoinmix2", 1, 3, false)
-	defer tc.cleanup()
-
-	fmt.Printf("Test: replica continues correctly after disk loss ...\n")
-
-	tc.join(0)
-	ck := tc.clerk()
-
-	k1 := randstring(10)
-	k1v := ""
-
-	for i := 0; i < 7+(rand.Int()%7); i++ {
-		x := randstring(10)
-		ck.Append(k1, x)
-		k1v += x
-	}
-
-	time.Sleep(300 * time.Millisecond)
-	ck.Get(k1)
-
-	tc.kill1(0, 0, false)
-
-	// R1 and R2 are up.
-	for i := 0; i < 2; i++ {
-		x := randstring(10)
-		ck.Append(k1, x)
-		k1v += x
-	}
-
-	// R1 loses its disk, R0 still down.
-	tc.kill1(0, 1, true)
-
-	// R2 down.
-	tc.kill1(0, 2, false)
-
-	// R0 and R1 up.
-	tc.start1(0, 0)
-	tc.start1(0, 1)
-
-	// check that requests are not executed.
-	// R0 is up, R1 is up but lost disk,
-	// R2 is down.
-	ch := make(chan string)
-	go func() {
-		ck1 := tc.clerk()
-		v := ck1.Get(k1)
-		ch <- v
-	}()
-	timeout := make(chan bool)
-	go func() { time.Sleep(3 * time.Second); timeout <- true }()
-	select {
-	case <-ch:
-		t.Fatalf("Get should not have succeeded.")
-	case <-timeout:
-		// this is what we hope for.
-	}
-
-	// stop R0, start R2.
-	tc.kill1(0, 0, false)
-	tc.start1(0, 2)
-
-	// now R1, which had lost its disk, has had a chance
-	// to contact both R2 and R0, which preserved their disks,
-	// though it talked to them at different times.
-	// and R2 is up with an intact and up-to-date disk.
-	// at this point R1 and R2 should be willing to proceed.
-
-	{
-		x := randstring(10)
-		ck.Append(k1, x)
-		k1v += x
-		v := ck.Get(k1)
-		if v != k1v {
-			t.Fatalf("Get returned wrong value")
-		}
-	}
-
-	tc.start1(0, 0)
-
-	time.Sleep(time.Second)
-	{
-		x := randstring(10)
-		ck.Append(k1, x)
-		k1v += x
-		v := ck.Get(k1)
-		if v != k1v {
-			t.Fatalf("Get returned wrong value")
-		}
 	}
 
 	fmt.Printf("  ... Passed\n")
