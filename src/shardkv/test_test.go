@@ -8,6 +8,7 @@ import "os"
 import "time"
 import "fmt"
 import "sync"
+import "sync/atomic"
 import "math/rand"
 
 // information about the servers of one replica group.
@@ -43,7 +44,7 @@ func port(tag string, host int) string {
 func (tc *tCluster) start1(gi int, si int, unreliable bool) {
 	s := StartServer(tc.groups[gi].gid, tc.masterports, tc.groups[gi].ports, si)
 	tc.groups[gi].servers[si] = s
-	s.Unreliable = unreliable
+	s.Setunreliable(unreliable)
 }
 
 func (tc *tCluster) cleanup() {
@@ -206,7 +207,7 @@ func TestMove(t *testing.T) {
 		os.Remove(port)
 	}
 
-	count := 0
+	count := int32(0)
 	var mu sync.Mutex
 	for i := 0; i < shardmaster.NShards; i++ {
 		go func(me int) {
@@ -214,7 +215,7 @@ func TestMove(t *testing.T) {
 			v := myck.Get(string('0' + me))
 			if v == string('0'+me) {
 				mu.Lock()
-				count++
+				atomic.AddInt32(&count, 1)
 				mu.Unlock()
 			} else {
 				t.Fatalf("Get(%v) yielded %v\n", me, v)
@@ -224,11 +225,12 @@ func TestMove(t *testing.T) {
 
 	time.Sleep(10 * time.Second)
 
-	if count > shardmaster.NShards/3 && count < 2*(shardmaster.NShards/3) {
+	ccc := atomic.LoadInt32(&count)
+	if ccc > shardmaster.NShards/3 && ccc < 2*(shardmaster.NShards/3) {
 		fmt.Printf("  ... Passed\n")
 	} else {
 		t.Fatalf("%v keys worked after killing 1/2 of groups; wanted %v",
-			count, shardmaster.NShards/2)
+			ccc, shardmaster.NShards/2)
 	}
 }
 

@@ -10,6 +10,7 @@ import "log"
 import "runtime"
 import "math/rand"
 import "os"
+import "sync"
 import "strconv"
 import "strings"
 import "sync/atomic"
@@ -189,7 +190,7 @@ func TestAtMostOnce(t *testing.T) {
 	var sa [nservers]*PBServer
 	for i := 0; i < nservers; i++ {
 		sa[i] = StartServer(vshost, port(tag, i+1))
-		sa[i].unreliable = true
+		sa[i].setunreliable(true)
 	}
 
 	for iters := 0; iters < viewservice.DeadPings*2; iters++ {
@@ -562,7 +563,7 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 	var sa [nservers]*PBServer
 	for i := 0; i < nservers; i++ {
 		sa[i] = StartServer(vshost, port(tag, i+1))
-		sa[i].unreliable = true
+		sa[i].setunreliable(true)
 	}
 
 	for iters := 0; iters < viewservice.DeadPings*2; iters++ {
@@ -675,6 +676,7 @@ func TestRepeatedCrash(t *testing.T) {
 
 	const nservers = 3
 	var sa [nservers]*PBServer
+	samu := sync.Mutex{}
 	for i := 0; i < nservers; i++ {
 		sa[i] = StartServer(vshost, port(tag, i+1))
 	}
@@ -703,7 +705,10 @@ func TestRepeatedCrash(t *testing.T) {
 			// wait long enough for new view to form, backup to be initialized
 			time.Sleep(2 * viewservice.PingInterval * viewservice.DeadPings)
 
-			sa[i] = StartServer(vshost, port(tag, i+1))
+			sss := StartServer(vshost, port(tag, i+1))
+			samu.Lock()
+			sa[i] = sss
+			samu.Unlock()
 
 			// wait long enough for new view to form, backup to be initialized
 			time.Sleep(2 * viewservice.PingInterval * viewservice.DeadPings)
@@ -761,7 +766,9 @@ func TestRepeatedCrash(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 
 	for i := 0; i < nservers; i++ {
+		samu.Lock()
 		sa[i].kill()
+		samu.Unlock()
 	}
 	time.Sleep(time.Second)
 	vs.Kill()
@@ -781,9 +788,10 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 
 	const nservers = 3
 	var sa [nservers]*PBServer
+	samu := sync.Mutex{}
 	for i := 0; i < nservers; i++ {
 		sa[i] = StartServer(vshost, port(tag, i+1))
-		sa[i].unreliable = true
+		sa[i].setunreliable(true)
 	}
 
 	for i := 0; i < viewservice.DeadPings; i++ {
@@ -810,7 +818,10 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 			// wait long enough for new view to form, backup to be initialized
 			time.Sleep(2 * viewservice.PingInterval * viewservice.DeadPings)
 
-			sa[i] = StartServer(vshost, port(tag, i+1))
+			sss := StartServer(vshost, port(tag, i+1))
+			samu.Lock()
+			sa[i] = sss
+			samu.Unlock()
 
 			// wait long enough for new view to form, backup to be initialized
 			time.Sleep(2 * viewservice.PingInterval * viewservice.DeadPings)
@@ -867,14 +878,16 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 	fmt.Printf("  ... Passed\n")
 
 	for i := 0; i < nservers; i++ {
+		samu.Lock()
 		sa[i].kill()
+		samu.Unlock()
 	}
 	time.Sleep(time.Second)
 	vs.Kill()
 	time.Sleep(time.Second)
 }
 
-func proxy(t *testing.T, port string, delay *int) {
+func proxy(t *testing.T, port string, delay *int32) {
 	portx := port + "x"
 	os.Remove(portx)
 	if os.Rename(port, portx) != nil {
@@ -893,7 +906,7 @@ func proxy(t *testing.T, port string, delay *int) {
 			if err != nil {
 				t.Fatalf("proxy accept failed: %v\n", err)
 			}
-			time.Sleep(time.Duration(*delay) * time.Second)
+			time.Sleep(time.Duration(atomic.LoadInt32(delay)) * time.Second)
 			c2, err := net.Dial("unix", portx)
 			if err != nil {
 				t.Fatalf("proxy dial failed: %v\n", err)
@@ -950,7 +963,7 @@ func TestPartition1(t *testing.T) {
 	os.Link(vshost, vshosta)
 
 	s1 := StartServer(vshosta, port(tag, 1))
-	delay := 0
+	delay := int32(0)
 	proxy(t, port(tag, 1), &delay)
 
 	deadtime := viewservice.PingInterval * viewservice.DeadPings
@@ -974,7 +987,7 @@ func TestPartition1(t *testing.T) {
 	// start a client Get(), but use proxy to delay it long
 	// enough that it won't reach s1 until after s1 is no
 	// longer the primary.
-	delay = 4
+	atomic.StoreInt32(&delay, 4)
 	stale_get := make(chan bool)
 	go func() {
 		local_stale := false
@@ -1041,7 +1054,7 @@ func TestPartition2(t *testing.T) {
 	os.Link(vshost, vshosta)
 
 	s1 := StartServer(vshosta, port(tag, 1))
-	delay := 0
+	delay := int32(0)
 	proxy(t, port(tag, 1), &delay)
 
 	fmt.Printf("Test: Partitioned old primary does not complete Gets ...\n")
@@ -1067,7 +1080,7 @@ func TestPartition2(t *testing.T) {
 	// start a client Get(), but use proxy to delay it long
 	// enough that it won't reach s1 until after s1 is no
 	// longer the primary.
-	delay = 5
+	atomic.StoreInt32(&delay, 5)
 	stale_get := make(chan bool)
 	go func() {
 		local_stale := false

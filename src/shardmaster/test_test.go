@@ -300,7 +300,7 @@ func TestUnreliable(t *testing.T) {
 		// don't turn on unreliable because the assignment
 		// doesn't require the shardmaster to detect duplicate
 		// client requests.
-		// sma[i].unreliable = true
+		// sma[i].setunreliable(true)
 	}
 
 	ck := MakeClerk(kvh)

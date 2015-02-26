@@ -7,6 +7,7 @@ import "log"
 import "time"
 import "paxos"
 import "sync"
+import "sync/atomic"
 import "os"
 import "syscall"
 import "encoding/gob"
@@ -36,8 +37,8 @@ type DisKV struct {
 	mu         sync.Mutex
 	l          net.Listener
 	me         int
-	dead       bool // for testing
-	Unreliable bool // for testing
+	dead       int32 // for testing
+	unreliable int32 // for testing
 	sm         *shardmaster.Clerk
 	px         *paxos.Paxos
 	dir        string // each replica has its own data directory
@@ -158,10 +159,28 @@ func (kv *DisKV) tick() {
 }
 
 // tell the server to shut itself down.
+// please don't change these two functions.
 func (kv *DisKV) kill() {
-	kv.dead = true
+	atomic.StoreInt32(&kv.dead, 1)
 	kv.l.Close()
 	kv.px.Kill()
+}
+
+func (kv *DisKV) isdead() bool {
+	return atomic.LoadInt32(&kv.dead) != 0
+}
+
+// please do not change these two functions.
+func (kv *DisKV) Setunreliable(what bool) {
+	if what {
+		atomic.StoreInt32(&kv.unreliable, 1)
+	} else {
+		atomic.StoreInt32(&kv.unreliable, 0)
+	}
+}
+
+func (kv *DisKV) isunreliable() bool {
+	return atomic.LoadInt32(&kv.unreliable) != 0
 }
 
 //
@@ -215,13 +234,13 @@ func StartServer(gid int64, shardmasters []string,
 	// or do anything to subvert it.
 
 	go func() {
-		for kv.dead == false {
+		for kv.isdead() == false {
 			conn, err := kv.l.Accept()
-			if err == nil && kv.dead == false {
-				if kv.Unreliable && (rand.Int63()%1000) < 100 {
+			if err == nil && kv.isdead() == false {
+				if kv.isunreliable() && (rand.Int63()%1000) < 100 {
 					// discard the request.
 					conn.Close()
-				} else if kv.Unreliable && (rand.Int63()%1000) < 200 {
+				} else if kv.isunreliable() && (rand.Int63()%1000) < 200 {
 					// process the request but force discard of reply.
 					c1 := conn.(*net.UnixConn)
 					f, _ := c1.File()
@@ -236,7 +255,7 @@ func StartServer(gid int64, shardmasters []string,
 			} else if err == nil {
 				conn.Close()
 			}
-			if err != nil && kv.dead == false {
+			if err != nil && kv.isdead() == false {
 				fmt.Printf("DisKV(%v) accept: %v\n", me, err.Error())
 				kv.kill()
 			}
@@ -244,7 +263,7 @@ func StartServer(gid int64, shardmasters []string,
 	}()
 
 	go func() {
-		for kv.dead == false {
+		for kv.isdead() == false {
 			kv.tick()
 			time.Sleep(250 * time.Millisecond)
 		}

@@ -62,7 +62,7 @@ func main() {
 	}
 
 	srv := diskv.StartServer(gid, masters, replicas, me, dir, restart)
-	srv.Unreliable = unreliable
+	srv.Setunreliable(unreliable)
 
 	// for safety, force quit after 10 minutes.
 	time.Sleep(10 * 60 * time.Second)

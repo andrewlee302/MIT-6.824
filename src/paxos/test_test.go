@@ -309,7 +309,7 @@ func TestManyForget(t *testing.T) {
 	}
 	for i := 0; i < npaxos; i++ {
 		pxa[i] = Make(pxh, i, nil)
-		pxa[i].unreliable = true
+		pxa[i].setunreliable(true)
 	}
 
 	fmt.Printf("Test: Lots of forgetting ...\n")
@@ -350,7 +350,7 @@ func TestManyForget(t *testing.T) {
 	time.Sleep(5 * time.Second)
 	done <- true
 	for i := 0; i < npaxos; i++ {
-		pxa[i].unreliable = false
+		pxa[i].setunreliable(false)
 	}
 	time.Sleep(2 * time.Second)
 
@@ -527,16 +527,16 @@ func TestRPCCount(t *testing.T) {
 
 	time.Sleep(2 * time.Second)
 
-	total1 := 0
+	total1 := int32(0)
 	for j := 0; j < npaxos; j++ {
-		total1 += pxa[j].rpcCount
+		total1 += atomic.LoadInt32(&pxa[j].rpcCount)
 	}
 
 	// per agreement:
 	// 3 prepares
 	// 3 accepts
 	// 3 decides
-	expected1 := ninst1 * npaxos * npaxos
+	expected1 := int32(ninst1 * npaxos * npaxos)
 	if total1 > expected1 {
 		t.Fatalf("too many RPCs for serial Start()s; %v instances, got %v, expected %v",
 			ninst1, total1, expected1)
@@ -553,9 +553,9 @@ func TestRPCCount(t *testing.T) {
 
 	time.Sleep(2 * time.Second)
 
-	total2 := 0
+	total2 := int32(0)
 	for j := 0; j < npaxos; j++ {
-		total2 += pxa[j].rpcCount
+		total2 += atomic.LoadInt32(&pxa[j].rpcCount)
 	}
 	total2 -= total1
 
@@ -563,7 +563,7 @@ func TestRPCCount(t *testing.T) {
 	// Proposer 1: 3 prep, 3 acc, 3 decides.
 	// Proposer 2: 3 prep, 3 acc, 3 prep, 3 acc, 3 decides.
 	// Proposer 3: 3 prep, 3 acc, 3 prep, 3 acc, 3 prep, 3 acc, 3 decides.
-	expected2 := ninst2 * npaxos * 15
+	expected2 := int32(ninst2 * npaxos * 15)
 	if total2 > expected2 {
 		t.Fatalf("too many RPCs for concurrent Start()s; %v instances, got %v, expected %v",
 			ninst2, total2, expected2)
@@ -677,7 +677,7 @@ func TestManyUnreliable(t *testing.T) {
 	}
 	for i := 0; i < npaxos; i++ {
 		pxa[i] = Make(pxh, i, nil)
-		pxa[i].unreliable = true
+		pxa[i].setunreliable(true)
 		pxa[i].Start(0, 0)
 	}
 
@@ -825,7 +825,7 @@ func TestPartition(t *testing.T) {
 		seq++
 
 		for i := 0; i < npaxos; i++ {
-			pxa[i].unreliable = true
+			pxa[i].setunreliable(true)
 		}
 
 		part(t, tag, npaxos, []int{0, 1, 2}, []int{3, 4}, []int{})
@@ -840,7 +840,7 @@ func TestPartition(t *testing.T) {
 		part(t, tag, npaxos, []int{0, 1}, []int{2, 3, 4}, []int{})
 
 		for i := 0; i < npaxos; i++ {
-			pxa[i].unreliable = false
+			pxa[i].setunreliable(false)
 		}
 
 		waitn(t, pxa, seq, 5)
@@ -870,7 +870,7 @@ func TestLots(t *testing.T) {
 			}
 		}
 		pxa[i] = Make(pxh, i, nil)
-		pxa[i].unreliable = true
+		pxa[i].setunreliable(true)
 	}
 	defer part(t, tag, npaxos, []int{}, []int{}, []int{})
 
@@ -899,7 +899,7 @@ func TestLots(t *testing.T) {
 		}
 	}()
 
-	seq := 0
+	seq := int32(0)
 
 	// periodically start a new instance
 	ch2 := make(chan bool)
@@ -908,16 +908,17 @@ func TestLots(t *testing.T) {
 		for atomic.LoadInt32(&done) == 0 {
 			// how many instances are in progress?
 			nd := 0
-			for i := 0; i < seq; i++ {
+			sq := int(atomic.LoadInt32(&seq))
+			for i := 0; i < sq; i++ {
 				if ndecided(t, pxa, i) == npaxos {
 					nd++
 				}
 			}
-			if seq-nd < 10 {
+			if sq-nd < 10 {
 				for i := 0; i < npaxos; i++ {
-					pxa[i].Start(seq, rand.Int()%10)
+					pxa[i].Start(sq, rand.Int()%10)
 				}
-				seq++
+				atomic.AddInt32(&seq, 1)
 			}
 			time.Sleep(time.Duration(rand.Int63()%300) * time.Millisecond)
 		}
@@ -928,7 +929,7 @@ func TestLots(t *testing.T) {
 	go func() {
 		defer func() { ch3 <- true }()
 		for atomic.LoadInt32(&done) == 0 {
-			for i := 0; i < seq; i++ {
+			for i := 0; i < int(atomic.LoadInt32(&seq)); i++ {
 				ndecided(t, pxa, i)
 			}
 			time.Sleep(time.Duration(rand.Int63()%300) * time.Millisecond)
@@ -943,12 +944,12 @@ func TestLots(t *testing.T) {
 
 	// repair, then check that all instances decided.
 	for i := 0; i < npaxos; i++ {
-		pxa[i].unreliable = false
+		pxa[i].setunreliable(false)
 	}
 	part(t, tag, npaxos, []int{0, 1, 2, 3, 4}, []int{}, []int{})
 	time.Sleep(5 * time.Second)
 
-	for i := 0; i < seq; i++ {
+	for i := 0; i < int(atomic.LoadInt32(&seq)); i++ {
 		waitmajority(t, pxa, i)
 	}
 

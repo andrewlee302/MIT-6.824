@@ -12,7 +12,7 @@ import "sync/atomic"
 type ViewServer struct {
 	mu       sync.Mutex
 	l        net.Listener
-	dead     bool  // for testing
+	dead     int32 // for testing
 	rpccount int32 // for testing
 	me       string
 
@@ -54,11 +54,18 @@ func (vs *ViewServer) tick() {
 //
 // tell the server to shut itself down.
 // for testing.
-// please don't change this function.
+// please don't change these two functions.
 //
 func (vs *ViewServer) Kill() {
-	vs.dead = true
+	atomic.StoreInt32(&vs.dead, 1)
 	vs.l.Close()
+}
+
+//
+// has this server been asked to shut down?
+//
+func (vs *ViewServer) isdead() bool {
+	return atomic.LoadInt32(&vs.dead) != 0
 }
 
 // please don't change this function.
@@ -89,15 +96,15 @@ func StartServer(me string) *ViewServer {
 
 	// create a thread to accept RPC connections from clients.
 	go func() {
-		for vs.dead == false {
+		for vs.isdead() == false {
 			conn, err := vs.l.Accept()
-			if err == nil && vs.dead == false {
+			if err == nil && vs.isdead() == false {
 				atomic.AddInt32(&vs.rpccount, 1)
 				go rpcs.ServeConn(conn)
 			} else if err == nil {
 				conn.Close()
 			}
-			if err != nil && vs.dead == false {
+			if err != nil && vs.isdead() == false {
 				fmt.Printf("ViewServer(%v) accept: %v\n", me, err.Error())
 				vs.Kill()
 			}
@@ -106,7 +113,7 @@ func StartServer(me string) *ViewServer {
 
 	// create a thread to call tick() periodically.
 	go func() {
-		for vs.dead == false {
+		for vs.isdead() == false {
 			vs.tick()
 			time.Sleep(PingInterval)
 		}

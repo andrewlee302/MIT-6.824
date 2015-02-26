@@ -7,6 +7,7 @@ import "log"
 import "time"
 import "viewservice"
 import "sync"
+import "sync/atomic"
 import "os"
 import "syscall"
 import "math/rand"
@@ -16,8 +17,8 @@ import "math/rand"
 type PBServer struct {
 	mu         sync.Mutex
 	l          net.Listener
-	dead       bool // for testing
-	unreliable bool // for testing
+	dead       int32 // for testing
+	unreliable int32 // for testing
 	me         string
 	vs         *viewservice.Clerk
 	// Your declarations here.
@@ -53,10 +54,27 @@ func (pb *PBServer) tick() {
 }
 
 // tell the server to shut itself down.
-// please do not change this function.
+// please do not change these two functions.
 func (pb *PBServer) kill() {
-	pb.dead = true
+	atomic.StoreInt32(&pb.dead, 1)
 	pb.l.Close()
+}
+
+func (pb *PBServer) isdead() bool {
+	return atomic.LoadInt32(&pb.dead) != 0
+}
+
+// please do not change these two functions.
+func (pb *PBServer) setunreliable(what bool) {
+	if what {
+		atomic.StoreInt32(&pb.unreliable, 1)
+	} else {
+		atomic.StoreInt32(&pb.unreliable, 0)
+	}
+}
+
+func (pb *PBServer) isunreliable() bool {
+	return atomic.LoadInt32(&pb.unreliable) != 0
 }
 
 
@@ -80,13 +98,13 @@ func StartServer(vshost string, me string) *PBServer {
 	// or do anything to subvert it.
 
 	go func() {
-		for pb.dead == false {
+		for pb.isdead() == false {
 			conn, err := pb.l.Accept()
-			if err == nil && pb.dead == false {
-				if pb.unreliable && (rand.Int63()%1000) < 100 {
+			if err == nil && pb.isdead() == false {
+				if pb.isunreliable() && (rand.Int63()%1000) < 100 {
 					// discard the request.
 					conn.Close()
-				} else if pb.unreliable && (rand.Int63()%1000) < 200 {
+				} else if pb.isunreliable() && (rand.Int63()%1000) < 200 {
 					// process the request but force discard of reply.
 					c1 := conn.(*net.UnixConn)
 					f, _ := c1.File()
@@ -101,7 +119,7 @@ func StartServer(vshost string, me string) *PBServer {
 			} else if err == nil {
 				conn.Close()
 			}
-			if err != nil && pb.dead == false {
+			if err != nil && pb.isdead() == false {
 				fmt.Printf("PBServer(%v) accept: %v\n", me, err.Error())
 				pb.kill()
 			}
@@ -109,7 +127,7 @@ func StartServer(vshost string, me string) *PBServer {
 	}()
 
 	go func() {
-		for pb.dead == false {
+		for pb.isdead() == false {
 			pb.tick()
 			time.Sleep(viewservice.PingInterval)
 		}
