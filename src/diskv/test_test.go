@@ -16,6 +16,7 @@ import "math/rand"
 import crand "crypto/rand"
 import "encoding/base64"
 import "path/filepath"
+import "sync/atomic"
 
 type tServer struct {
 	p       *os.Process
@@ -510,12 +511,11 @@ func Test5BasicPersistence(t *testing.T) {
 		v := ck1.Get("a")
 		ch <- v
 	}()
-	timeout := make(chan bool)
-	go func() { time.Sleep(3 * time.Second); timeout <- true }()
+
 	select {
 	case <-ch:
 		t.Fatalf("Get should not have succeeded after killing all servers.")
-	case <-timeout:
+	case <-time.After(3 * time.Second):
 		// this is what we hope for.
 	}
 
@@ -641,7 +641,7 @@ func Test5DiskUse(t *testing.T) {
 	ck.Get(k4)
 
 	// let all the replicas tick().
-	time.Sleep(1100 * time.Millisecond)
+	time.Sleep(2100 * time.Millisecond)
 
 	max := int64(20 * 1000)
 
@@ -738,7 +738,7 @@ func Test5AppendUse(t *testing.T) {
 	ck.Get(k4)
 
 	// let all the replicas tick().
-	time.Sleep(1100 * time.Millisecond)
+	time.Sleep(2100 * time.Millisecond)
 
 	max := int64(3*n*1000) + 20000
 
@@ -992,14 +992,14 @@ func doConcurrentCrash(t *testing.T, unreliable bool) {
 	k1 := randstring(10)
 	ck.Put(k1, "")
 
-	stop := false
+	stop := int32(0)
 
 	ff := func(me int, ch chan int) {
 		ret := -1
 		defer func() { ch <- ret }()
 		myck := tc.clerk()
 		n := 0
-		for stop == false || n < 5 {
+		for atomic.LoadInt32(&stop) == 0 || n < 5 {
 			myck.Append(k1, "x "+strconv.Itoa(me)+" "+strconv.Itoa(n)+" y")
 			n++
 			time.Sleep(200 * time.Millisecond)
@@ -1039,7 +1039,7 @@ func doConcurrentCrash(t *testing.T, unreliable bool) {
 	}
 
 	time.Sleep(2 * time.Second)
-	stop = true
+	atomic.StoreInt32(&stop, 1)
 
 	counts := []int{}
 	for i := 0; i < ncli; i++ {
@@ -1185,12 +1185,11 @@ func Test5RejoinMix1(t *testing.T) {
 		v := ck1.Get(k1)
 		ch <- v
 	}()
-	timeout := make(chan bool)
-	go func() { time.Sleep(3 * time.Second); timeout <- true }()
+
 	select {
 	case <-ch:
 		t.Fatalf("Get should not have succeeded.")
-	case <-timeout:
+	case <-time.After(3 * time.Second):
 		// this is what we hope for.
 	}
 

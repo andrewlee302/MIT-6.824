@@ -9,6 +9,7 @@ import "fmt"
 import "math/rand"
 import crand "crypto/rand"
 import "encoding/base64"
+import "sync/atomic"
 
 func randstring(n int) string {
 	b := make([]byte, 2*n)
@@ -314,7 +315,6 @@ func TestManyForget(t *testing.T) {
 	fmt.Printf("Test: Lots of forgetting ...\n")
 
 	const maxseq = 20
-	done := false
 
 	go func() {
 		na := rand.Perm(maxseq)
@@ -327,8 +327,14 @@ func TestManyForget(t *testing.T) {
 		}
 	}()
 
+	done := make(chan bool)
 	go func() {
-		for done == false {
+		for {
+			select {
+			case <-done:
+				return
+			default:
+			}
 			seq := (rand.Int() % maxseq)
 			i := (rand.Int() % npaxos)
 			if seq >= pxa[i].Min() {
@@ -342,7 +348,7 @@ func TestManyForget(t *testing.T) {
 	}()
 
 	time.Sleep(5 * time.Second)
-	done = true
+	done <- true
 	for i := 0; i < npaxos; i++ {
 		pxa[i].unreliable = false
 	}
@@ -868,13 +874,13 @@ func TestLots(t *testing.T) {
 	}
 	defer part(t, tag, npaxos, []int{}, []int{}, []int{})
 
-	done := false
+	done := int32(0)
 
 	// re-partition periodically
 	ch1 := make(chan bool)
 	go func() {
 		defer func() { ch1 <- true }()
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			var a [npaxos]int
 			for i := 0; i < npaxos; i++ {
 				a[i] = (rand.Int() % 3)
@@ -899,7 +905,7 @@ func TestLots(t *testing.T) {
 	ch2 := make(chan bool)
 	go func() {
 		defer func() { ch2 <- true }()
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			// how many instances are in progress?
 			nd := 0
 			for i := 0; i < seq; i++ {
@@ -921,7 +927,7 @@ func TestLots(t *testing.T) {
 	ch3 := make(chan bool)
 	go func() {
 		defer func() { ch3 <- true }()
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			for i := 0; i < seq; i++ {
 				ndecided(t, pxa, i)
 			}
@@ -930,7 +936,7 @@ func TestLots(t *testing.T) {
 	}()
 
 	time.Sleep(20 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 	<-ch1
 	<-ch2
 	<-ch3

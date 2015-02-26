@@ -8,6 +8,7 @@ import "time"
 import "fmt"
 import "math/rand"
 import "strings"
+import "sync/atomic"
 
 func check(t *testing.T, ck *Clerk, key string, value string) {
 	v := ck.Get(key)
@@ -269,23 +270,25 @@ func TestPartition(t *testing.T) {
 
 	fmt.Printf("Test: No progress in minority ...\n")
 
-	done0 := false
-	done1 := false
+	done0 := make(chan bool)
+	done1 := make(chan bool)
 	go func() {
 		cka[0].Put("1", "15")
-		done0 = true
+		done0 <- true
 	}()
 	go func() {
 		cka[1].Get("1")
-		done1 = true
+		done1 <- true
 	}()
-	time.Sleep(time.Second)
-	if done0 {
+
+	select {
+	case <-done0:
 		t.Fatalf("Put in minority completed")
-	}
-	if done1 {
+	case <-done1:
 		t.Fatalf("Get in minority completed")
+	case <-time.After(time.Second):
 	}
+
 	check(t, cka[4], "1", "14")
 	cka[3].Put("1", "16")
 	check(t, cka[4], "1", "16")
@@ -295,31 +298,30 @@ func TestPartition(t *testing.T) {
 	fmt.Printf("Test: Completion after heal ...\n")
 
 	part(t, tag, nservers, []int{0, 2, 3, 4}, []int{1}, []int{})
-	for iters := 0; iters < 30; iters++ {
-		if done0 {
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-	if done0 == false {
+
+	select {
+	case <-done0:
+	case <-time.After(30 * 100 * time.Millisecond):
 		t.Fatalf("Put did not complete")
 	}
-	if done1 {
+
+	select {
+	case <-done1:
 		t.Fatalf("Get in minority completed")
+	default:
 	}
+
 	check(t, cka[4], "1", "15")
 	check(t, cka[0], "1", "15")
 
 	part(t, tag, nservers, []int{0, 1, 2}, []int{3, 4}, []int{})
-	for iters := 0; iters < 100; iters++ {
-		if done1 {
-			break
-		}
-		time.Sleep(100 * time.Millisecond)
-	}
-	if done1 == false {
+
+	select {
+	case <-done1:
+	case <-time.After(100 * 100 * time.Millisecond):
 		t.Fatalf("Get did not complete")
 	}
+
 	check(t, cka[1], "1", "15")
 
 	fmt.Printf("  ... Passed\n")
@@ -544,7 +546,7 @@ func TestHole(t *testing.T) {
 		ck2 := MakeClerk([]string{port(tag, 2)})
 		ck2.Put("q", "q")
 
-		done := false
+		done := int32(0)
 		const nclients = 10
 		var ca [nclients]chan bool
 		for xcli := 0; xcli < nclients; xcli++ {
@@ -559,7 +561,7 @@ func TestHole(t *testing.T) {
 				key := strconv.Itoa(cli)
 				last := ""
 				cka[0].Put(key, last)
-				for done == false {
+				for atomic.LoadInt32(&done) == 0 {
 					ci := (rand.Int() % 2)
 					if (rand.Int() % 1000) < 500 {
 						nv := strconv.Itoa(rand.Int())
@@ -590,7 +592,7 @@ func TestHole(t *testing.T) {
 
 		// restore network, wait for all threads to exit.
 		part(t, tag, nservers, []int{0, 1, 2, 3, 4}, []int{}, []int{})
-		done = true
+		atomic.StoreInt32(&done, 1)
 		ok := true
 		for i := 0; i < nclients; i++ {
 			z := <-ca[i]
@@ -631,13 +633,13 @@ func TestManyPartition(t *testing.T) {
 	defer part(t, tag, nservers, []int{}, []int{}, []int{})
 	part(t, tag, nservers, []int{0, 1, 2, 3, 4}, []int{}, []int{})
 
-	done := false
+	done := int32(0)
 
 	// re-partition periodically
 	ch1 := make(chan bool)
 	go func() {
 		defer func() { ch1 <- true }()
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			var a [nservers]int
 			for i := 0; i < nservers; i++ {
 				a[i] = (rand.Int() % 3)
@@ -675,7 +677,7 @@ func TestManyPartition(t *testing.T) {
 			key := strconv.Itoa(cli)
 			last := ""
 			myck.Put(key, last)
-			for done == false {
+			for atomic.LoadInt32(&done) == 0 {
 				if (rand.Int() % 1000) < 500 {
 					nv := strconv.Itoa(rand.Int())
 					myck.Append(key, nv)
@@ -693,7 +695,7 @@ func TestManyPartition(t *testing.T) {
 	}
 
 	time.Sleep(20 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 	<-ch1
 	part(t, tag, nservers, []int{0, 1, 2, 3, 4}, []int{}, []int{})
 

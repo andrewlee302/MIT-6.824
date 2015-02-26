@@ -12,6 +12,7 @@ import "math/rand"
 import "os"
 import "strconv"
 import "strings"
+import "sync/atomic"
 
 func check(ck *Clerk, key string, value string) {
 	v := ck.Get(key)
@@ -151,14 +152,16 @@ func TestBasicFail(t *testing.T) {
 	s2.kill()
 	s3 := StartServer(vshost, port(tag, 3))
 	time.Sleep(1 * time.Second)
-	get_done := false
+	get_done := make(chan bool)
 	go func() {
 		ck.Get("1")
-		get_done = true
+		get_done <- true
 	}()
-	time.Sleep(2 * time.Second)
-	if get_done {
+
+	select {
+	case <-get_done:
 		t.Fatalf("ck.Get() returned even though no initialized primary")
+	case <-time.After(2 * time.Second):
 	}
 
 	fmt.Printf("  ... Passed\n")
@@ -342,7 +345,7 @@ func TestConcurrentSame(t *testing.T) {
 	// give p+b time to ack, initialize
 	time.Sleep(viewservice.PingInterval * viewservice.DeadPings)
 
-	done := false
+	done := int32(0)
 
 	view1, _ := vck.Get()
 	const nclients = 3
@@ -351,7 +354,7 @@ func TestConcurrentSame(t *testing.T) {
 		go func(i int) {
 			ck := MakeClerk(vshost, "")
 			rr := rand.New(rand.NewSource(int64(os.Getpid() + i)))
-			for done == false {
+			for atomic.LoadInt32(&done) == 0 {
 				k := strconv.Itoa(rr.Int() % nkeys)
 				v := strconv.Itoa(rr.Int())
 				ck.Put(k, v)
@@ -360,7 +363,7 @@ func TestConcurrentSame(t *testing.T) {
 	}
 
 	time.Sleep(5 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 	time.Sleep(time.Second)
 
 	// read from primary
@@ -579,7 +582,7 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 		ck.Put("1", "x")
 	}
 
-	done := false
+	done := int32(0)
 
 	view1, _ := vck.Get()
 	const nclients = 3
@@ -592,7 +595,7 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 			defer func() { ch <- ok }()
 			ck := MakeClerk(vshost, "")
 			rr := rand.New(rand.NewSource(int64(os.Getpid() + i)))
-			for done == false {
+			for atomic.LoadInt32(&done) == 0 {
 				k := strconv.Itoa(rr.Int() % nkeys)
 				v := strconv.Itoa(rr.Int())
 				ck.Put(k, v)
@@ -602,7 +605,7 @@ func TestConcurrentSameUnreliable(t *testing.T) {
 	}
 
 	time.Sleep(5 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 
 	for i := 0; i < len(cha); i++ {
 		ok := <-cha[i]
@@ -687,12 +690,12 @@ func TestRepeatedCrash(t *testing.T) {
 	// wait a bit for primary to initialize backup
 	time.Sleep(viewservice.DeadPings * viewservice.PingInterval)
 
-	done := false
+	done := int32(0)
 
 	go func() {
 		// kill and restart servers
 		rr := rand.New(rand.NewSource(int64(os.Getpid())))
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			i := rr.Int() % nservers
 			// fmt.Printf("%v killing %v\n", ts(), 5001+i)
 			sa[i].kill()
@@ -717,7 +720,7 @@ func TestRepeatedCrash(t *testing.T) {
 			ck := MakeClerk(vshost, "")
 			data := map[string]string{}
 			rr := rand.New(rand.NewSource(int64(os.Getpid() + i)))
-			for done == false {
+			for atomic.LoadInt32(&done) == 0 {
 				k := strconv.Itoa((i * 1000000) + (rr.Int() % 10))
 				wanted, ok := data[k]
 				if ok {
@@ -738,7 +741,7 @@ func TestRepeatedCrash(t *testing.T) {
 	}
 
 	time.Sleep(20 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 
 	fmt.Printf("  ... Put/Gets done ... \n")
 
@@ -794,12 +797,12 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 	// wait a bit for primary to initialize backup
 	time.Sleep(viewservice.DeadPings * viewservice.PingInterval)
 
-	done := false
+	done := int32(0)
 
 	go func() {
 		// kill and restart servers
 		rr := rand.New(rand.NewSource(int64(os.Getpid())))
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			i := rr.Int() % nservers
 			// fmt.Printf("%v killing %v\n", ts(), 5001+i)
 			sa[i].kill()
@@ -820,7 +823,7 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 		defer func() { ch <- ret }()
 		ck := MakeClerk(vshost, "")
 		n := 0
-		for done == false {
+		for atomic.LoadInt32(&done) == 0 {
 			v := "x " + strconv.Itoa(i) + " " + strconv.Itoa(n) + " y"
 			ck.Append("0", v)
 			// if no sleep here, then server tick() threads do not get
@@ -839,7 +842,7 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 	}
 
 	time.Sleep(20 * time.Second)
-	done = true
+	atomic.StoreInt32(&done, 1)
 
 	fmt.Printf("  ... Appends done ... \n")
 
@@ -972,11 +975,13 @@ func TestPartition1(t *testing.T) {
 	// enough that it won't reach s1 until after s1 is no
 	// longer the primary.
 	delay = 4
-	stale_get := false
+	stale_get := make(chan bool)
 	go func() {
+		local_stale := false
+		defer func() { stale_get <- local_stale }()
 		x := ck1.Get("a")
 		if x == "1" {
-			stale_get = true
+			local_stale = true
 		}
 	}()
 
@@ -1004,9 +1009,12 @@ func TestPartition1(t *testing.T) {
 	check(ck2, "a", "111")
 
 	// wait for the background Get to s1 to be delivered.
-	time.Sleep(5 * time.Second)
-	if stale_get {
-		t.Fatalf("Get to old primary succeeded and produced stale value")
+	select {
+	case x := <-stale_get:
+		if x {
+			t.Fatalf("Get to old primary succeeded and produced stale value")
+		}
+	case <-time.After(5 * time.Second):
 	}
 
 	check(ck2, "a", "111")
@@ -1060,11 +1068,13 @@ func TestPartition2(t *testing.T) {
 	// enough that it won't reach s1 until after s1 is no
 	// longer the primary.
 	delay = 5
-	stale_get := false
+	stale_get := make(chan bool)
 	go func() {
+		local_stale := false
+		defer func() { stale_get <- local_stale }()
 		x := ck1.Get("a")
 		if x == "1" {
-			stale_get = true
+			local_stale = true
 		}
 	}()
 
@@ -1101,10 +1111,12 @@ func TestPartition2(t *testing.T) {
 	s2.kill()
 
 	// wait for delayed get to s1 to complete.
-	time.Sleep(6 * time.Second)
-
-	if stale_get == true {
-		t.Fatalf("partitioned primary replied to a Get with a stale value")
+	select {
+	case x := <-stale_get:
+		if x {
+			t.Fatalf("partitioned primary replied to a Get with a stale value")
+		}
+	case <-time.After(6 * time.Second):
 	}
 
 	check(ck2, "a", "2")
