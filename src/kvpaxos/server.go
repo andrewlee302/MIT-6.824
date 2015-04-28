@@ -61,6 +61,7 @@ func (kv *KVPaxos) kill() {
 	kv.px.Kill()
 }
 
+// call this to find out if the server is dead.
 func (kv *KVPaxos) isdead() bool {
 	return atomic.LoadInt32(&kv.dead) != 0
 }

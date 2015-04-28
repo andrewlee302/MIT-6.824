@@ -116,7 +116,6 @@ func (ck *Clerk) Get(key string) string {
 		// ask master for a new configuration.
 		ck.config = ck.sm.Query(-1)
 	}
-	return ""
 }
 
 // send a Put or Append request.

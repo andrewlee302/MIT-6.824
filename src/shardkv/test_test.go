@@ -302,7 +302,7 @@ func TestLimp(t *testing.T) {
 }
 
 func doConcurrent(t *testing.T, unreliable bool) {
-	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), false)
+	tc := setup(t, "concurrent-"+strconv.FormatBool(unreliable), unreliable)
 	defer tc.cleanup()
 
 	for i := 0; i < len(tc.groups); i++ {

@@ -67,7 +67,6 @@ func (ck *Clerk) Query(num int) Config {
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
-	return Config{}
 }
 
 func (ck *Clerk) Join(gid int64, servers []string) {
@@ -110,7 +109,7 @@ func (ck *Clerk) Move(shard int, gid int64) {
 			args := &MoveArgs{}
 			args.Shard = shard
 			args.GID = gid
-			var reply LeaveReply
+			var reply MoveReply
 			ok := call(srv, "ShardMaster.Move", args, &reply)
 			if ok {
 				return

@@ -61,6 +61,7 @@ func (sm *ShardMaster) Kill() {
 	sm.px.Kill()
 }
 
+// call this to find out if the server is dead.
 func (sm *ShardMaster) isdead() bool {
 	return atomic.LoadInt32(&sm.dead) != 0
 }

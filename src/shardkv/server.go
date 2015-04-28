@@ -71,6 +71,7 @@ func (kv *ShardKV) kill() {
 	kv.px.Kill()
 }
 
+// call this to find out if the server is dead.
 func (kv *ShardKV) isdead() bool {
 	return atomic.LoadInt32(&kv.dead) != 0
 }

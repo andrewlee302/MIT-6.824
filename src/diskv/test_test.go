@@ -174,6 +174,7 @@ func setup(t *testing.T, tag string, ngroups int, nreplicas int, unreliable bool
 	runtime.GOMAXPROCS(4)
 
 	// compile ../main/diskvd.go
+	// cmd := exec.Command("go", "build", "-race", "diskvd.go")
 	cmd := exec.Command("go", "build", "diskvd.go")
 	cmd.Dir = "../main"
 	cmd.Stdout = os.Stdout
@@ -1119,7 +1120,7 @@ func Test5Simultaneous(t *testing.T) {
 		vx := ck.Get(k1)
 		checkAppends(t, vx, counts)
 		tc.start1(0, i%3)
-		time.Sleep(1000 * time.Millisecond)
+		time.Sleep(2200 * time.Millisecond)
 
 		z := <-ch
 		if z != 1 {
