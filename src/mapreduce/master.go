@@ -3,12 +3,10 @@ package mapreduce
 import "container/list"
 import "fmt"
 
-
 type WorkerInfo struct {
 	address string
 	// You can add definitions here.
 }
-
 
 // Clean up all workers by sending a Shutdown RPC to each one of them Collect
 // the number of jobs each work has performed.
@@ -30,5 +28,66 @@ func (mr *MapReduce) KillWorkers() *list.List {
 
 func (mr *MapReduce) RunMaster() *list.List {
 	// Your code here
+	workerPool := make(chan string, 10)
+	go func() {
+		for wkName := range mr.registerChannel {
+			mr.Workers[wkName] = &WorkerInfo{address: wkName}
+			workerPool <- wkName
+		}
+	}()
+
+	for i := 0; i < mr.nMap; i++ {
+		go func(jobRank int) {
+			wkName := <-workerPool
+			var reply DoJobReply
+			for {
+				call(wkName, "Worker.DoJob", &DoJobArgs{File: mr.file,
+					Operation: JobType(Map), JobNumber: jobRank, NumOtherPhase: mr.nReduce}, &reply)
+				if !reply.OK {
+					wkName = <-workerPool
+				} else {
+					workerPool <- wkName
+					break
+				}
+			}
+			mr.barrier <- true
+		}(i)
+	}
+
+	mapFinishCnt := 0
+	for range mr.barrier {
+		mapFinishCnt++
+		if mapFinishCnt == mr.nMap {
+			break
+		}
+	}
+
+	for i := 0; i < mr.nReduce; i++ {
+		go func(jobRank int) {
+			wkName := <-workerPool
+			var reply DoJobReply
+			for {
+				call(wkName, "Worker.DoJob", &DoJobArgs{File: mr.file,
+					Operation: JobType(Reduce), JobNumber: jobRank, NumOtherPhase: mr.nMap}, &reply)
+				if !reply.OK {
+					wkName = <-workerPool
+				} else {
+					workerPool <- wkName
+					break
+				}
+			}
+			mr.barrier <- true
+		}(i)
+	}
+
+	redFinishCnt := 0
+	for range mr.barrier {
+		redFinishCnt++
+		if redFinishCnt == mr.nReduce {
+			break
+		}
+	}
+	close(mr.barrier)
+
 	return mr.KillWorkers()
 }
