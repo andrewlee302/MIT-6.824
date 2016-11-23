@@ -16,8 +16,12 @@ type ViewServer struct {
 	rpccount int32 // for testing
 	me       string
 
-
 	// Your declarations here.
+	isPrimaryAck    bool
+	currView        View
+	nextView        View
+	primaryMissTick int
+	backupMissTick  int
 }
 
 //
@@ -26,7 +30,42 @@ type ViewServer struct {
 func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 
 	// Your code here.
-
+	vs.mu.Lock()
+	if args.Me == vs.currView.Primary {
+		// ??? Restarted primary treated as dead
+		if args.Viewnum == 0 {
+			vs.primaryMissTick = vs.backupMissTick
+			vs.backupMissTick = 0
+			vs.nextView.Primary = vs.nextView.Backup
+			vs.nextView.Backup = ""
+			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+		}
+		vs.primaryMissTick = 0
+		if args.Viewnum == vs.currView.Viewnum {
+			vs.isPrimaryAck = true
+		}
+	} else if args.Me == vs.currView.Backup {
+		vs.backupMissTick = 0
+	} else {
+		// if vs.currView.Primary == "", only be assigned when vs.currView.Viewnum == 0
+		if vs.currView.Primary == "" && vs.currView.Viewnum == 0 {
+			vs.currView.Primary = args.Me
+			vs.currView.Viewnum++
+			vs.nextView = vs.currView
+		} else if vs.currView.Backup == "" && vs.nextView.Backup == "" {
+			// if vs.nextView.Backup == "", then vs.currView.Backup == "" definitely
+			vs.nextView.Backup = args.Me
+			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+		} else { // the third alternative
+			// nothing
+		}
+	}
+	if vs.isPrimaryAck && vs.currView.Viewnum < vs.nextView.Viewnum {
+		vs.currView = vs.nextView
+		vs.isPrimaryAck = false
+	}
+	reply.View = vs.currView
+	vs.mu.Unlock()
 	return nil
 }
 
@@ -34,12 +73,10 @@ func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 // server Get() RPC handler.
 //
 func (vs *ViewServer) Get(args *GetArgs, reply *GetReply) error {
-
 	// Your code here.
-
+	reply.View = vs.currView
 	return nil
 }
-
 
 //
 // tick() is called once per PingInterval; it should notice
@@ -49,6 +86,50 @@ func (vs *ViewServer) Get(args *GetArgs, reply *GetReply) error {
 func (vs *ViewServer) tick() {
 
 	// Your code here.
+	vs.mu.Lock()
+	if vs.currView.Primary != "" {
+		vs.primaryMissTick++
+	}
+	if vs.currView.Backup != "" {
+		vs.backupMissTick++
+	}
+	if vs.primaryMissTick == DeadPings {
+		vs.primaryMissTick = 0
+		if vs.currView.Backup != "" && vs.backupMissTick != DeadPings {
+			vs.primaryMissTick = vs.backupMissTick
+			vs.backupMissTick = 0
+			vs.nextView.Primary = vs.nextView.Backup
+			vs.nextView.Backup = ""
+			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+		} else if vs.currView.Backup != "" && vs.backupMissTick == DeadPings {
+			vs.primaryMissTick = 0
+			vs.backupMissTick = 0
+			vs.nextView.Primary = ""
+			vs.nextView.Backup = ""
+			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+		} else { // vs.currView.Backup == ""
+			// primary in view i must have been primary or backup in view i-1
+			// so, the primary candidate (nextView.Backup) is invalid before being promoted to currView.Backup.
+			vs.primaryMissTick = 0
+			vs.nextView.Primary = ""
+			vs.nextView.Backup = ""
+			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+		}
+	} else if vs.currView.Backup != "" && vs.backupMissTick == DeadPings {
+		vs.backupMissTick = 0
+		vs.nextView.Backup = ""
+		vs.nextView.Viewnum = vs.currView.Viewnum + 1
+	} else {
+		// nothing
+	}
+
+	// ?, modify in ticking?
+	if vs.isPrimaryAck && vs.currView.Viewnum < vs.nextView.Viewnum {
+		vs.currView = vs.nextView
+		vs.isPrimaryAck = false
+	}
+	vs.mu.Unlock()
+
 }
 
 //
@@ -77,6 +158,11 @@ func StartServer(me string) *ViewServer {
 	vs := new(ViewServer)
 	vs.me = me
 	// Your vs.* initializations here.
+	vs.currView = View{0, "", ""}
+	vs.nextView = View{0, "", ""}
+	vs.primaryMissTick = 0
+	vs.backupMissTick = 0
+	vs.isPrimaryAck = true
 
 	// tell net/rpc about our RPC server and handlers.
 	rpcs := rpc.NewServer()
