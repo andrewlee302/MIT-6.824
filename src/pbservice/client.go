@@ -7,10 +7,12 @@ import "fmt"
 import "crypto/rand"
 import "math/big"
 
-
 type Clerk struct {
 	vs *viewservice.Clerk
 	// Your declarations here
+	primary string
+	me      string
+	seq     int
 }
 
 // this may come in handy.
@@ -25,10 +27,12 @@ func MakeClerk(vshost string, me string) *Clerk {
 	ck := new(Clerk)
 	ck.vs = viewservice.MakeClerk(me, vshost)
 	// Your ck.* initializations here
+	ck.primary = ck.vs.Primary()
+	ck.me = me
+	ck.seq = 0
 
 	return ck
 }
-
 
 //
 // call() sends an RPC to the rpcname handler on server srv
@@ -72,18 +76,37 @@ func call(srv string, rpcname string,
 // says the key doesn't exist (has never been Put().
 //
 func (ck *Clerk) Get(key string) string {
-
 	// Your code here.
-
-	return "???"
+	args := &GetArgs{Key: key}
+	var reply GetReply
+	for {
+		if ok := call(ck.primary, "PBServer.Get", args, &reply); ok &&
+			(reply.Err == OK || reply.Err == ErrNoKey) {
+			return reply.Value
+		}
+		ck.primary = ck.vs.Primary()
+		if ck.primary == "" {
+			return ""
+		}
+	}
 }
 
 //
 // send a Put or Append RPC
 //
 func (ck *Clerk) PutAppend(key string, value string, op string) {
-
 	// Your code here.
+	args := &PutAppendArgs{Key: key, Value: value, Op: op, Sender: ck.me, IsClient: true, Seq: nrand()}
+	var reply PutAppendReply
+	for {
+		if ok := call(ck.primary, "PBServer.PutAppend", args, &reply); ok && reply.Err == OK {
+			return
+		}
+		ck.primary = ck.vs.Primary()
+		if ck.primary == "" {
+			return
+		}
+	}
 }
 
 //

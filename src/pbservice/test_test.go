@@ -889,6 +889,7 @@ func TestRepeatedCrashUnreliable(t *testing.T) {
 
 func proxy(t *testing.T, port string, delay *int32) {
 	portx := port + "x"
+	fmt.Println("proxyMethod", port, portx)
 	os.Remove(portx)
 	if os.Rename(port, portx) != nil {
 		t.Fatalf("proxy rename failed")
@@ -975,6 +976,7 @@ func TestPartition1(t *testing.T) {
 	s2 := StartServer(vshost, port(tag, 2))
 	time.Sleep(deadtime * 2)
 	v1, _ := vck.Get()
+	fmt.Println(v1)
 	if v1.Primary != s1.me || v1.Backup != s2.me {
 		t.Fatal("backup did not join view")
 	}

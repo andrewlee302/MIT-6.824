@@ -6,6 +6,11 @@ const (
 	ErrWrongServer = "ErrWrongServer"
 )
 
+const (
+	Put    = "Put"
+	Append = "Append"
+)
+
 type Err string
 
 // Put or Append
@@ -16,6 +21,10 @@ type PutAppendArgs struct {
 
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	Op       string
+	Sender   string
+	IsClient bool  // from a normal client or server
+	Seq      int64 // dedup the same client request
 }
 
 type PutAppendReply struct {
@@ -32,5 +41,14 @@ type GetReply struct {
 	Value string
 }
 
+type BackupArgs struct {
+	Dataset         map[string]string
+	ProcessedSeqSet map[int64]bool
+	Sender          string
+}
+
+type BackupReply struct {
+	Err Err
+}
 
 // Your RPC definitions here.

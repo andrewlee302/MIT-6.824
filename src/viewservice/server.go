@@ -32,13 +32,21 @@ func (vs *ViewServer) Ping(args *PingArgs, reply *PingReply) error {
 	// Your code here.
 	vs.mu.Lock()
 	if args.Me == vs.currView.Primary {
-		// ??? Restarted primary treated as dead
+		// ??? Restarted primary treated as dead. !!! The ram data could be lost
 		if args.Viewnum == 0 {
-			vs.primaryMissTick = vs.backupMissTick
-			vs.backupMissTick = 0
-			vs.nextView.Primary = vs.nextView.Backup
-			vs.nextView.Backup = ""
-			vs.nextView.Viewnum = vs.currView.Viewnum + 1
+			if vs.currView.Backup != "" {
+				vs.primaryMissTick = vs.backupMissTick
+				vs.backupMissTick = 0
+				vs.nextView.Primary = vs.nextView.Backup
+				vs.nextView.Backup = ""
+				vs.nextView.Viewnum = vs.currView.Viewnum + 1
+			} else {
+				vs.primaryMissTick = 0
+				vs.backupMissTick = 0
+				vs.nextView.Primary = ""
+				vs.nextView.Backup = ""
+				vs.nextView.Viewnum = vs.currView.Viewnum + 1
+			}
 		}
 		vs.primaryMissTick = 0
 		if args.Viewnum == vs.currView.Viewnum {
@@ -109,7 +117,7 @@ func (vs *ViewServer) tick() {
 			vs.nextView.Viewnum = vs.currView.Viewnum + 1
 		} else { // vs.currView.Backup == ""
 			// primary in view i must have been primary or backup in view i-1
-			// so, the primary candidate (nextView.Backup) is invalid before being promoted to currView.Backup.
+			// so, the nextView.Backup is a invalid candidate of primary before being promoted to currView.Backup.
 			vs.primaryMissTick = 0
 			vs.nextView.Primary = ""
 			vs.nextView.Backup = ""
@@ -123,7 +131,7 @@ func (vs *ViewServer) tick() {
 		// nothing
 	}
 
-	// ?, modify in ticking?
+	// ?, modify in ticking? yes!
 	if vs.isPrimaryAck && vs.currView.Viewnum < vs.nextView.Viewnum {
 		vs.currView = vs.nextView
 		vs.isPrimaryAck = false
