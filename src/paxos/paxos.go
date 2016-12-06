@@ -31,6 +31,7 @@ import "sync/atomic"
 import "fmt"
 import "math/rand"
 
+import "time"
 
 // px.Status() return values, indicating
 // whether an agreement has been decided,
@@ -53,9 +54,83 @@ type Paxos struct {
 	peers      []string
 	me         int // index into peers[]
 
-
 	// Your data here.
+	proposerMgr *ProposerManager
+	acceptorMgr *AcceptorManager
+
+	chosen_value map[int]interface{}
+
+	doneSeqs     []int // non-local, except doneSeqs[me]
+	minDoneSeq   int   // the minimal in doneSeqs
+	minDoneIndex int   // the index of the minimal in doneSeqs
 }
+
+type ProposerManager struct {
+	px             *Paxos
+	mu             sync.Mutex
+	peers          []string
+	me             int // index of the proposers
+	proposers      map[int]*Proposer
+	seq_max        int
+	seq_chosen_max int
+}
+
+type AcceptorManager struct {
+	mu        sync.Mutex
+	acceptors map[int]*Acceptor
+	seq_max   int
+}
+
+type Acceptor struct {
+	mu sync.Mutex
+	// init: -1, -1, ""
+	n_p int
+	n_a int
+	v_a interface{}
+}
+
+type Proposer struct {
+	mgr           *ProposerManager
+	seq           int
+	propose_value interface{}
+}
+
+type PrepareArgs struct {
+	Seq int
+	N   int
+}
+
+type PrepareReply struct {
+	N    int // for choosing next proposing number
+	N_a  int
+	V_a  interface{}
+	Succ bool
+}
+
+type AcceptArgs struct {
+	Seq int
+	N   int
+	V   interface{}
+}
+
+type AcceptReply struct {
+	N    int // for choosing next proposing number
+	Succ bool
+}
+
+type DecideArgs struct {
+	Seq int
+	V   interface{}
+}
+
+type DecideReply bool
+
+type SeqArgs struct {
+	Sender int
+	Seq    int
+}
+
+type SeqReply bool
 
 //
 // call() sends an RPC to the rpcname handler on server srv
@@ -89,10 +164,211 @@ func call(srv string, name string, args interface{}, reply interface{}) bool {
 		return true
 	}
 
-	fmt.Println(err)
+	// fmt.Println(err)
 	return false
 }
 
+func (proposerMgr *ProposerManager) RunProposer(seq int, v interface{}) {
+	proposerMgr.mu.Lock()
+	defer proposerMgr.mu.Unlock()
+	if _, ok := proposerMgr.proposers[seq]; !ok {
+		if seq > proposerMgr.seq_max {
+			proposerMgr.seq_max = seq
+		}
+		prop := &Proposer{mgr: proposerMgr, seq: seq, propose_value: v}
+		proposerMgr.proposers[seq] = prop
+		go func() {
+			prop.Propose()
+		}()
+	}
+}
+
+func (acceptorMgr *AcceptorManager) GetInstance(seq int) *Acceptor {
+	acceptorMgr.mu.Lock()
+	defer acceptorMgr.mu.Unlock()
+	acceptor, ok := acceptorMgr.acceptors[seq]
+	if !ok {
+		if seq > acceptorMgr.seq_max {
+			acceptorMgr.seq_max = seq
+		}
+		acceptor = &Acceptor{n_p: -1, n_a: -1, v_a: nil}
+		acceptorMgr.acceptors[seq] = acceptor
+	}
+	return acceptor
+}
+
+func (px *Paxos) Prepare(args *PrepareArgs, reply *PrepareReply) error {
+	acceptor := px.acceptorMgr.GetInstance(args.Seq)
+	acceptor.mu.Lock()
+	defer acceptor.mu.Unlock()
+	if args.N > acceptor.n_p {
+		reply.Succ = true
+		acceptor.n_p = args.N
+		reply.N = args.N
+		reply.N_a = acceptor.n_a
+		reply.V_a = acceptor.v_a
+	} else {
+		reply.Succ = false
+		reply.N = acceptor.n_p
+	}
+	return nil
+}
+
+func (px *Paxos) Accept(args *AcceptArgs, reply *AcceptReply) error {
+	acceptor := px.acceptorMgr.GetInstance(args.Seq)
+	acceptor.mu.Lock()
+	defer acceptor.mu.Unlock()
+	if args.N >= acceptor.n_p {
+		reply.Succ = true
+		acceptor.n_p = args.N
+		acceptor.n_a = args.N
+		acceptor.v_a = args.V
+		reply.N = args.N
+	} else {
+		reply.Succ = false
+		reply.N = acceptor.n_p
+	}
+	return nil
+}
+
+func (px *Paxos) Decide(args *DecideArgs, reply *DecideReply) error {
+	px.mu.Lock()
+	defer px.mu.Unlock()
+	px.chosen_value[args.Seq] = args.V
+	*reply = DecideReply(true)
+	return nil
+}
+
+func (proposer *Proposer) Propose() {
+	peers_num := len(proposer.mgr.peers)
+	majority_num := peers_num/2 + 1
+
+	propose_num := proposer.mgr.me
+	for {
+		next_propose_num := propose_num
+		// prepare request
+		prepareReplies := make(chan PrepareReply, peers_num)
+		prepareBarrier := make(chan bool)
+		for me, peer := range proposer.mgr.peers {
+			go func(me int, peer string) {
+				args := &PrepareArgs{Seq: proposer.seq, N: propose_num}
+				var reply PrepareReply
+
+				// avoid the situation that local rpc is fragile, however the acceptor should prepare value that itself issued.
+				succ := true
+				if me != proposer.mgr.me {
+					succ = call(peer, "Paxos.Prepare", args, &reply)
+				} else {
+					proposer.mgr.px.Prepare(args, &reply)
+				}
+				prepareBarrier <- true
+				if succ {
+					if reply.Succ {
+						prepareReplies <- reply
+					} else if reply.N > next_propose_num {
+						// TODO atomic
+						next_propose_num = reply.N // not be sure
+					}
+				}
+			}(me, peer)
+		}
+
+		// barrier
+		for i := 0; i < peers_num; i++ {
+			<-prepareBarrier
+		}
+
+		if len(prepareReplies) >= majority_num {
+			var accepted_value interface{} = nil
+			accepted_propose_num := -1
+			replies_num := len(prepareReplies)
+			for i := 0; i < replies_num; i++ {
+				r := <-prepareReplies
+				if r.N_a > accepted_propose_num {
+					accepted_propose_num = r.N_a
+					accepted_value = r.V_a
+				}
+			}
+
+			// accept request
+			acceptReplies := make(chan AcceptReply, peers_num)
+			acceptBarrier := make(chan bool)
+			var accept_req_value interface{}
+
+			if accepted_value != nil {
+				// accepting has happened, use the accepted value
+				accept_req_value = accepted_value
+			} else {
+				// no accept, use own propose value
+				accept_req_value = proposer.propose_value
+			}
+			for me, peer := range proposer.mgr.peers {
+				go func(me int, peer string) {
+					args := &AcceptArgs{Seq: proposer.seq, N: propose_num, V: accept_req_value}
+					var reply AcceptReply
+					// same reason
+					succ := true
+					if me != proposer.mgr.me {
+						succ = call(peer, "Paxos.Accept", args, &reply)
+					} else {
+						proposer.mgr.px.Accept(args, &reply)
+					}
+					acceptBarrier <- true
+					if succ {
+						if reply.Succ {
+							acceptReplies <- reply
+						} else if reply.N > next_propose_num {
+							next_propose_num = reply.N
+						}
+					}
+				}(me, peer)
+			}
+
+			// barrier
+			for i := 0; i < peers_num; i++ {
+				<-acceptBarrier
+			}
+
+			if len(acceptReplies) >= majority_num {
+				// be sure to get a chosen value
+				for me, peer := range proposer.mgr.peers {
+					go func(me int, peer string) {
+						args := &DecideArgs{Seq: proposer.seq, V: accept_req_value}
+						var reply DecideReply
+						// same reason
+						if me != proposer.mgr.me {
+							succ := false
+							// loop for success
+							for !succ {
+								succ = call(peer, "Paxos.Decide", args, &reply)
+								time.Sleep(time.Second)
+							}
+						} else {
+							proposer.mgr.px.Decide(args, &reply)
+						}
+					}(me, peer)
+				}
+				break
+			} // end if accept
+		} // end if prepare
+
+		try_num := next_propose_num/peers_num*peers_num + proposer.mgr.me
+		if try_num > next_propose_num {
+			next_propose_num = try_num
+		} else {
+			next_propose_num = try_num + peers_num
+		}
+		// assertion: next_propose_num become bigger
+		if next_propose_num <= propose_num || next_propose_num%peers_num != proposer.mgr.me {
+			log.Fatalln("unexpected error!!!")
+		}
+		propose_num = next_propose_num
+
+		// sleep for avoiding thrashing of proposing
+		time.Sleep(time.Second)
+	}
+
+}
 
 //
 // the application wants paxos to start agreement on
@@ -103,6 +379,13 @@ func call(srv string, name string, args interface{}, reply interface{}) bool {
 //
 func (px *Paxos) Start(seq int, v interface{}) {
 	// Your code here.
+
+	// ignore the instance whose seq isn't more than minDoneSeq
+	if seq <= px.minDoneSeq {
+		return
+	}
+
+	px.proposerMgr.RunProposer(seq, v)
 }
 
 //
@@ -113,6 +396,58 @@ func (px *Paxos) Start(seq int, v interface{}) {
 //
 func (px *Paxos) Done(seq int) {
 	// Your code here.
+	for me, peer := range px.peers {
+		go func(me int, peer string) {
+			args := &SeqArgs{Seq: seq, Sender: px.me}
+			var reply SeqReply
+			if me != px.me {
+				call(peer, "Paxos.UpdateDoneSeqs", args, &reply)
+			} else {
+				// the same reason using local invocation instead of RPC
+				px.UpdateDoneSeqs(args, &reply)
+			}
+		}(me, peer)
+	}
+}
+
+func (px *Paxos) UpdateDoneSeqs(args *SeqArgs, reply *SeqReply) error {
+	px.mu.Lock()
+	defer px.mu.Unlock()
+	if args.Seq > px.doneSeqs[args.Sender] {
+		px.doneSeqs[args.Sender] = args.Seq
+		// minimal changes only when the former one become bigger
+		if args.Sender == px.minDoneIndex {
+			px.minDoneSeq = args.Seq
+			for index, seq := range px.doneSeqs {
+				if seq < px.minDoneSeq {
+					px.minDoneSeq = seq
+					px.minDoneIndex = index
+				}
+			}
+
+			// release instance
+
+			for s, _ := range px.chosen_value {
+				if s <= px.minDoneSeq {
+					delete(px.chosen_value, s)
+				}
+			}
+
+			for s, _ := range px.proposerMgr.proposers {
+				if s <= px.minDoneSeq {
+					delete(px.proposerMgr.proposers, s)
+				}
+			}
+
+			for s, _ := range px.acceptorMgr.acceptors {
+				if s <= px.minDoneSeq {
+					delete(px.proposerMgr.proposers, s)
+				}
+			}
+
+		}
+	}
+	return nil
 }
 
 //
@@ -122,7 +457,9 @@ func (px *Paxos) Done(seq int) {
 //
 func (px *Paxos) Max() int {
 	// Your code here.
-	return 0
+	px.proposerMgr.mu.Lock()
+	defer px.proposerMgr.mu.Unlock()
+	return px.proposerMgr.seq_max
 }
 
 //
@@ -155,7 +492,9 @@ func (px *Paxos) Max() int {
 //
 func (px *Paxos) Min() int {
 	// You code here.
-	return 0
+	px.mu.Lock()
+	defer px.mu.Unlock()
+	return px.minDoneSeq + 1
 }
 
 //
@@ -167,10 +506,16 @@ func (px *Paxos) Min() int {
 //
 func (px *Paxos) Status(seq int) (Fate, interface{}) {
 	// Your code here.
-	return Pending, nil
+	px.proposerMgr.mu.Lock()
+	defer px.proposerMgr.mu.Unlock()
+	if value, ok := px.chosen_value[seq]; seq <= px.minDoneSeq {
+		return Forgotten, nil
+	} else if ok {
+		return Decided, value
+	} else {
+		return Pending, nil
+	}
 }
-
-
 
 //
 // tell the peer to shut itself down.
@@ -214,15 +559,29 @@ func Make(peers []string, me int, rpcs *rpc.Server) *Paxos {
 	px.peers = peers
 	px.me = me
 
-
 	// Your initialization code here.
+	px.chosen_value = make(map[int]interface{})
+
+	px.doneSeqs = make([]int, len(px.peers))
+	for i := 0; i < len(px.peers); i++ {
+		px.doneSeqs[i] = -1
+	}
+	px.minDoneSeq = -1
+	px.minDoneIndex = 0
+
+	px.proposerMgr = &ProposerManager{peers: peers, me: me, proposers: make(map[int]*Proposer), seq_max: -1, seq_chosen_max: -1, px: px}
+	px.acceptorMgr = &AcceptorManager{acceptors: make(map[int]*Acceptor), seq_max: -1}
 
 	if rpcs != nil {
 		// caller will create socket &c
 		rpcs.Register(px)
+		rpcs.Register(px.acceptorMgr)
+		rpcs.Register(px.proposerMgr)
 	} else {
 		rpcs = rpc.NewServer()
 		rpcs.Register(px)
+		rpcs.Register(px.acceptorMgr)
+		rpcs.Register(px.proposerMgr)
 
 		// prepare to receive connections from clients.
 		// change "unix" to "tcp" to use over a network.
@@ -267,7 +626,6 @@ func Make(peers []string, me int, rpcs *rpc.Server) *Paxos {
 			}
 		}()
 	}
-
 
 	return px
 }

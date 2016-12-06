@@ -1,6 +1,6 @@
 # Andrew's Implementation of Labs of MIT 6.824
 
-## [MIT 6.824: Distributed Systems](http://nil.csail.mit.edu/6.824/2015/schedule.html)
+## [MIT 6.824(2015): Distributed Systems](http://nil.csail.mit.edu/6.824/2015/schedule.html)
 6.824 is a core graduate subject with lectures, labs, an optional project, a mid-term exam, and a final exam. 6.824 is 12 units.
 
 ## Progress
