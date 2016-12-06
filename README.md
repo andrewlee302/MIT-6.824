@@ -6,16 +6,19 @@
 ## Progress
 1. Lab 1: MapReduce (Done)
   * Worker failure
-2. Lab 2 Part-A: Primary/Backup Key/Value Service (Done)
-  * View server (zookeeper-like component)
-3. Lab 2 Part-B: Primary/Backup Key/Value Service (Done)
-  * PRC at-most-one semantics (dedup)
-  * replication from primary to backup
-  * mutex of concurrency request
-  * client requests of expired view
-4. Lab 3: Paxos-based Key/Value Service (Undone)
-5. Lab 4: Sharded Key/Value Service (Undone)
-6. Lab 5: Persistence (Undone)
+2. Lab 2 : Primary/Backup Key/Value Service 
+  * Part-A (Done)
+    * View server (zookeeper-like component)
+  * Part-B (Done)
+    * PRC at-most-one semantics (dedup)
+    * replication from primary to backup
+    * mutex of concurrency request
+    * client requests of expired view
+3. Lab 3: Paxos-based Key/Value Service
+  * Part-A Paxos Service (Done)
+  * Part-B: Paxos-based Key/Value Server (Undone)
+4. Lab 4: Sharded Key/Value Service (Undone)
+5. Lab 5: Persistence (Undone)
 
 ## Deploy
 1. Install golang, and setup golang environment variables and directories. [Click here](https://golang.org/doc/install) to learn it.
