@@ -93,6 +93,7 @@ type Proposer struct {
 	mgr           *ProposerManager
 	seq           int
 	propose_value interface{}
+	isDead        bool
 }
 
 type PrepareArgs struct {
@@ -175,7 +176,7 @@ func (proposerMgr *ProposerManager) RunProposer(seq int, v interface{}) {
 		if seq > proposerMgr.seq_max {
 			proposerMgr.seq_max = seq
 		}
-		prop := &Proposer{mgr: proposerMgr, seq: seq, propose_value: v}
+		prop := &Proposer{mgr: proposerMgr, seq: seq, propose_value: v, isDead: false}
 		proposerMgr.proposers[seq] = prop
 		go func() {
 			prop.Propose()
@@ -244,7 +245,7 @@ func (proposer *Proposer) Propose() {
 	majority_num := peers_num/2 + 1
 
 	propose_num := proposer.mgr.me
-	for {
+	for !proposer.isDead {
 		next_propose_num := propose_num
 		// prepare request
 		prepareReplies := make(chan PrepareReply, peers_num)
@@ -339,7 +340,7 @@ func (proposer *Proposer) Propose() {
 						if me != proposer.mgr.me {
 							succ := false
 							// loop for success
-							for !succ {
+							for !succ && !proposer.isDead {
 								succ = call(peer, "Paxos.Decide", args, &reply)
 								time.Sleep(time.Second)
 							}
@@ -427,21 +428,22 @@ func (px *Paxos) UpdateDoneSeqs(args *SeqArgs, reply *SeqReply) error {
 
 			// release instance
 
+			for s, prop := range px.proposerMgr.proposers {
+				if s <= px.minDoneSeq {
+					prop.isDead = true
+					delete(px.proposerMgr.proposers, s)
+				}
+			}
+
 			for s, _ := range px.chosen_value {
 				if s <= px.minDoneSeq {
 					delete(px.chosen_value, s)
 				}
 			}
 
-			for s, _ := range px.proposerMgr.proposers {
-				if s <= px.minDoneSeq {
-					delete(px.proposerMgr.proposers, s)
-				}
-			}
-
 			for s, _ := range px.acceptorMgr.acceptors {
 				if s <= px.minDoneSeq {
-					delete(px.proposerMgr.proposers, s)
+					delete(px.acceptorMgr.acceptors, s)
 				}
 			}
 
