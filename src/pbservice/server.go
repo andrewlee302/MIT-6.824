@@ -13,11 +13,21 @@ import "syscall"
 import "math/rand"
 import "errors"
 
+/*
+	The crash thing isn't taken into accounts.
+	Test cases don't contain the condition concurrent append operations occur with unreliable rpc.
+*/
+
 const (
 	RoleNull    = 0
 	RolePrimary = 1
 	RoleBackup  = 2
 )
+
+type SeqValue struct {
+	Seq   int64
+	Value string // the value before execute req of seq
+}
 
 type PBServer struct {
 	mu         sync.Mutex
@@ -28,9 +38,10 @@ type PBServer struct {
 	vs         *viewservice.Clerk
 
 	// Your declarations here.
-	cond            *sync.Cond
 	processedSeqSet map[int64]bool // dedup
 	dataset         map[string]string
+	last_dataset    map[string]SeqValue // for recovering the k-v
+	versions        map[string]int64
 	view            viewservice.View
 	role            uint
 	// only valid when the server is primary
@@ -39,19 +50,18 @@ type PBServer struct {
 	pingFailed bool
 }
 
-func (pb *PBServer) LocalOp(args *PutAppendArgs) {
-	switch args.Op {
+func (pb *PBServer) LocalOp(op string, key string, value string) {
+	switch op {
 	case Put:
-		pb.LocalPut(args.Key, args.Value)
+		pb.LocalPut(key, value)
 	case Append:
-		pb.LocalAppend(args.Key, args.Value)
+		pb.LocalAppend(key, value)
 	default:
 		// do nothing
 	}
 }
 
-func (pb *PBServer) BackupOp(args *PutAppendArgs, reply *PutAppendReply) bool {
-	_args := &PutAppendArgs{Key: args.Key, Value: args.Value, Op: args.Op, Sender: pb.me, IsClient: false, Seq: args.Seq}
+func (pb *PBServer) BackupOp(args *ForwardArgs, reply *ForwardReply) bool {
 	// times := 0
 	// for pb.backupHost != "" {
 	// 	if ok := call(pb.backupHost, "PBServer.PutAppend", _args, &reply); ok {
@@ -67,7 +77,7 @@ func (pb *PBServer) BackupOp(args *PutAppendArgs, reply *PutAppendReply) bool {
 	// 		pb.cond.Wait()
 	// 	}
 	// }
-	ok := call(pb.backupHost, "PBServer.PutAppend", _args, &reply)
+	ok := call(pb.backupHost, "PBServer.ForwardPutAppend", args, &reply)
 	return ok
 }
 
@@ -83,10 +93,12 @@ func (pb *PBServer) LocalAppend(key string, value string) {
 	}
 }
 
-func (pb *PBServer) Backup(args *BackupArgs, reply *BackupReply) error {
+func (pb *PBServer) Replicate(args *ReplicateArgs, reply *ReplicateReply) error {
 	if pb.role == RoleBackup && args.Sender == pb.view.Primary {
 		pb.dataset = args.Dataset
+		pb.last_dataset = args.LastDataset
 		pb.processedSeqSet = args.ProcessedSeqSet
+		pb.versions = args.Versions
 		reply.Err = OK
 	} else {
 		reply.Err = ErrWrongServer
@@ -125,65 +137,140 @@ func (pb *PBServer) Get(args *GetArgs, reply *GetReply) error {
 	return nil
 }
 
-func (pb *PBServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
-	// Your code here.
+func (pb *PBServer) ForwardPutAppend(args *ForwardArgs, reply *ForwardReply) error {
 	pb.mu.Lock()
-	if _, ok := pb.processedSeqSet[args.Seq]; ok {
-		reply.Err = OK
-		pb.mu.Unlock()
+	defer pb.mu.Unlock()
+	if pb.role != RoleBackup || args.Sender != pb.view.Primary {
+		// reject
+		reply.Err = ErrWrongServer
 		return nil
 	}
-	switch pb.role {
-	case RolePrimary:
-		{
-			if args.IsClient {
-				// pb.LocalOp(args)
-				// pb.BackupOp(args, reply)
-
-				if pb.backupHost != "" {
-					ok := pb.BackupOp(args, reply)
-					if ok && reply.Err == OK {
-						pb.LocalOp(args)
-						pb.processedSeqSet[args.Seq] = true
-					} else if !ok {
-						pb.mu.Unlock()
-						return errors.New("backup conn problem")
-					}
-				} else {
-					pb.LocalOp(args)
-					pb.processedSeqSet[args.Seq] = true
-				}
-			} else {
-				// reject
-				reply.Err = ErrWrongServer
-			}
-		}
-	case RoleBackup:
-		{
-			if !args.IsClient && args.Sender == pb.view.Primary {
-				pb.LocalOp(args)
-				reply.Err = OK
-				pb.processedSeqSet[args.Seq] = true
-			} else {
-				// reject
-				reply.Err = ErrWrongServer
-			}
-		}
-	default:
-		{
-			reply.Err = ErrWrongServer
-		}
+	/*
+		// Backup doesn't check the dup, just apply it. It violates
+		// the at-most-once semantics if the non-idempotent op (append) occurs.
+		// The test cases don't contain the thing.
+		pb.LocalOp(args.Op, args.Key, args.Value)
+		pb.processedSeqSet[args.Seq] = true
+		reply.Err = OK
+		return nil
+	*/
+	// assert(args.Version == pb.versions[args.Key]||args.Version+1 == pb.versions[args.Key])
+	if !(args.Version == pb.versions[args.Key] || args.Version+1 == pb.versions[args.Key]) {
+		log.Fatalln("backup error", args.Version, pb.versions[args.Key], args.Value)
 	}
-	pb.mu.Unlock()
+	if args.Version == 0 {
+		// reset the value to null of the corresponding type
+		log.Println("backup reset0", args.Version, pb.versions[args.Key], args.Value)
+		pb.dataset[args.Key] = ""
+	} else if args.Version == pb.versions[args.Key] {
+		// if not exists, then 0
+		log.Println("backup normal", pb.me, args.Version, pb.versions[args.Key], args.Value)
+	} else {
+		// assert(args.Version + 1 == pb.versions[args.Key])
+		log.Println("backup reset1", pb.me, args.Version, pb.versions[args.Key], args.Value)
+		pb.dataset[args.Key] = pb.last_dataset[args.Key].Value
+		delete(pb.processedSeqSet, pb.last_dataset[args.Key].Seq)
+	}
+	pb.last_dataset[args.Key] = SeqValue{Seq: args.Seq, Value: pb.dataset[args.Key]}
+	pb.versions[args.Key] = args.Version + 1
+	pb.LocalOp(args.Op, args.Key, args.Value)
+	pb.processedSeqSet[args.Seq] = true
+	reply.Version = pb.versions[args.Key]
+	reply.Err = OK
 	return nil
 }
 
+func (pb *PBServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
+	// Your code here.
+	pb.mu.Lock()
+	defer pb.mu.Unlock()
+	if pb.role != RolePrimary {
+		// reject
+		reply.Err = ErrWrongServer
+		return nil
+	}
+
+	reply.Err = OK
+	if _, ok := pb.processedSeqSet[args.Seq]; ok {
+		return nil
+	}
+	version := pb.versions[args.Key] // if not exists, then 0
+	log.Println("primary start", pb.me, version, args.Value)
+	if pb.backupHost != "" {
+		var f_reply ForwardReply
+		f_args := &ForwardArgs{Key: args.Key, Value: args.Value, Op: args.Op, Sender: pb.me, Seq: args.Seq, Version: version}
+		ok := pb.BackupOp(f_args, &f_reply)
+		if ok && f_reply.Err == OK {
+			log.Println("primary normal", pb.me, f_reply.Version, args.Value)
+			pb.versions[args.Key] = f_reply.Version
+		} else if !ok {
+			log.Println("backup conn problem", pb.me, args.Value)
+			return errors.New("backup conn problem")
+		}
+	} else {
+		pb.versions[args.Key] = version + 1
+		log.Println("primary normal only", pb.me, version+1, args.Value)
+	}
+	pb.last_dataset[args.Key] = SeqValue{Seq: args.Seq, Value: pb.dataset[args.Key]}
+	pb.LocalOp(args.Op, args.Key, args.Value)
+	pb.processedSeqSet[args.Seq] = true
+	return nil
+
+	/*
+		switch pb.role {
+		case RolePrimary:
+			{
+				if _, ok := pb.processedSeqSet[args.Seq]; ok {
+					reply.Err = OK
+					return nil
+				}
+				if args.IsClient {
+					if pb.backupHost != "" {
+						ok := pb.BackupOp(args, reply)
+						if ok && reply.Err == OK {
+							pb.LocalOp(args)
+							pb.processedSeqSet[args.Seq] = true
+						} else if !ok {
+							return errors.New("backup conn problem")
+						}
+					} else {
+						pb.LocalOp(args)
+						pb.processedSeqSet[args.Seq] = true
+					}
+				} else {
+					// reject
+					reply.Err = ErrWrongServer
+				}
+			}
+		case RoleBackup:
+			{
+				// Backup doesn't check the dup, just apply it. It violates
+				// the at-most-once semantics if the non-idempotent op (append) occurs.
+				// The test cases don't contain the thing.
+				if !args.IsClient && args.Sender == pb.view.Primary {
+					pb.LocalOp(args)
+					pb.processedSeqSet[args.Seq] = true
+					reply.Err = OK
+				} else {
+					// reject
+					reply.Err = ErrWrongServer
+				}
+			}
+		default:
+			{
+				reply.Err = ErrWrongServer
+			}
+		}
+		return nil
+	*/
+}
+
 // rpc call
-func (pb *PBServer) Replicate() {
+func (pb *PBServer) RunReplicate() {
 	for pb.backupHost != "" {
-		args := &BackupArgs{Dataset: pb.dataset, Sender: pb.me, ProcessedSeqSet: pb.processedSeqSet}
-		var reply BackupReply
-		if ok := call(pb.backupHost, "PBServer.Backup", args, &reply); ok {
+		args := &ReplicateArgs{Dataset: pb.dataset, LastDataset: pb.last_dataset, Sender: pb.me, ProcessedSeqSet: pb.processedSeqSet, Versions: pb.versions}
+		var reply ReplicateReply
+		if ok := call(pb.backupHost, "PBServer.Replicate", args, &reply); ok {
 			if reply.Err == OK {
 				break
 			} else {
@@ -208,6 +295,7 @@ func (pb *PBServer) Replicate() {
 func (pb *PBServer) tick() {
 	// Your code here.
 	pb.mu.Lock()
+	defer pb.mu.Unlock()
 	// view changed
 	if view, err := pb.vs.Ping(pb.view.Viewnum); err == nil {
 		pb.pingFailed = false
@@ -222,7 +310,7 @@ func (pb *PBServer) tick() {
 					pb.role = RolePrimary
 					if pb.view.Backup != "" {
 						pb.backupHost = pb.view.Backup
-						pb.Replicate()
+						pb.RunReplicate()
 					} else {
 						// pb.view.Backup == ""
 						pb.backupHost = ""
@@ -247,8 +335,6 @@ func (pb *PBServer) tick() {
 		// network failure to viewserver
 		pb.pingFailed = true
 	}
-	pb.cond.Signal()
-	pb.mu.Unlock()
 }
 
 // tell the server to shut itself down.
@@ -281,9 +367,10 @@ func StartServer(vshost string, me string) *PBServer {
 	pb.me = me
 	pb.vs = viewservice.MakeClerk(me, vshost)
 	// Your pb.* initializations here.
-	pb.cond = sync.NewCond(&pb.mu)
 	pb.view = viewservice.View{Viewnum: 0, Primary: "", Backup: ""}
 	pb.dataset = make(map[string]string)
+	pb.last_dataset = make(map[string]SeqValue)
+	pb.versions = make(map[string]int64)
 	pb.processedSeqSet = make(map[int64]bool)
 	pb.role = RoleNull
 	pb.backupHost = ""

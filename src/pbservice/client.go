@@ -96,7 +96,7 @@ func (ck *Clerk) Get(key string) string {
 //
 func (ck *Clerk) PutAppend(key string, value string, op string) {
 	// Your code here.
-	args := &PutAppendArgs{Key: key, Value: value, Op: op, Sender: ck.me, IsClient: true, Seq: nrand()}
+	args := &PutAppendArgs{Key: key, Value: value, Op: op, Sender: ck.me, Seq: nrand()}
 	var reply PutAppendReply
 	for {
 		if ok := call(ck.primary, "PBServer.PutAppend", args, &reply); ok && reply.Err == OK {
