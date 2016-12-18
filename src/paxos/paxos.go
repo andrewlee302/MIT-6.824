@@ -235,11 +235,13 @@ func (px *Paxos) Accept(args *AcceptArgs, reply *AcceptReply) error {
 func (px *Paxos) Decide(args *DecideArgs, reply *DecideReply) error {
 	px.mu.Lock()
 	defer px.mu.Unlock()
+	// assertion: it must be an idempotent operation
 	px.chosen_value[args.Seq] = args.V
 	*reply = DecideReply(true)
 	return nil
 }
 
+// loop for getting the chosen value, except being dead
 func (proposer *Proposer) Propose() {
 	peers_num := len(proposer.mgr.peers)
 	majority_num := peers_num/2 + 1
@@ -268,7 +270,7 @@ func (proposer *Proposer) Propose() {
 						prepareReplies <- reply
 					} else if reply.N > next_propose_num {
 						// TODO atomic
-						next_propose_num = reply.N // not be sure
+						next_propose_num = reply.N
 					}
 				}
 			}(me, peer)
@@ -338,12 +340,16 @@ func (proposer *Proposer) Propose() {
 						var reply DecideReply
 						// same reason
 						if me != proposer.mgr.me {
+							call(peer, "Paxos.Decide", args, &reply)
+							/* For unreliable rpc and controlling resource, it's better
+							use the following. It's not necessary, others can lanunch
+							the `start` procedure.
 							succ := false
-							// loop for success
 							for !succ && !proposer.isDead {
 								succ = call(peer, "Paxos.Decide", args, &reply)
 								time.Sleep(time.Second)
 							}
+							*/
 						} else {
 							proposer.mgr.px.Decide(args, &reply)
 						}
@@ -365,8 +371,9 @@ func (proposer *Proposer) Propose() {
 		}
 		propose_num = next_propose_num
 
+		// TODO
 		// sleep for avoiding thrashing of proposing
-		time.Sleep(time.Second)
+		time.Sleep(50 * time.Millisecond)
 	}
 
 }
@@ -428,12 +435,14 @@ func (px *Paxos) UpdateDoneSeqs(args *SeqArgs, reply *SeqReply) error {
 
 			// release instance
 
+			px.proposerMgr.mu.Lock()
 			for s, prop := range px.proposerMgr.proposers {
 				if s <= px.minDoneSeq {
 					prop.isDead = true
 					delete(px.proposerMgr.proposers, s)
 				}
 			}
+			px.proposerMgr.mu.Unlock()
 
 			for s, _ := range px.chosen_value {
 				if s <= px.minDoneSeq {
@@ -441,11 +450,13 @@ func (px *Paxos) UpdateDoneSeqs(args *SeqArgs, reply *SeqReply) error {
 				}
 			}
 
+			px.acceptorMgr.mu.Lock()
 			for s, _ := range px.acceptorMgr.acceptors {
 				if s <= px.minDoneSeq {
 					delete(px.acceptorMgr.acceptors, s)
 				}
 			}
+			px.acceptorMgr.mu.Unlock()
 
 		}
 	}
@@ -459,9 +470,12 @@ func (px *Paxos) UpdateDoneSeqs(args *SeqArgs, reply *SeqReply) error {
 //
 func (px *Paxos) Max() int {
 	// Your code here.
-	px.proposerMgr.mu.Lock()
-	defer px.proposerMgr.mu.Unlock()
-	return px.proposerMgr.seq_max
+	a, b := px.acceptorMgr.seq_max, px.proposerMgr.seq_max
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }
 
 //
@@ -508,8 +522,8 @@ func (px *Paxos) Min() int {
 //
 func (px *Paxos) Status(seq int) (Fate, interface{}) {
 	// Your code here.
-	px.proposerMgr.mu.Lock()
-	defer px.proposerMgr.mu.Unlock()
+	px.mu.Lock()
+	defer px.mu.Unlock()
 	if value, ok := px.chosen_value[seq]; seq <= px.minDoneSeq {
 		return Forgotten, nil
 	} else if ok {
