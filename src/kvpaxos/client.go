@@ -66,6 +66,15 @@ func call(srv string, rpcname string,
 //
 func (ck *Clerk) Get(key string) string {
 	// You will have to modify this function.
+	args := &GetArgs{Key: key, Id: nrand()}
+	var reply GetReply
+	for i := 0; ; {
+		if ok := call(ck.servers[i], "KVPaxos.Get", args, &reply); ok && (reply.Err == OK || reply.Err == ErrNoKey) {
+			return reply.Value
+		}
+		i++
+		i %= len(ck.servers)
+	}
 	return ""
 }
 
@@ -74,6 +83,15 @@ func (ck *Clerk) Get(key string) string {
 //
 func (ck *Clerk) PutAppend(key string, value string, op string) {
 	// You will have to modify this function.
+	args := &PutAppendArgs{Key: key, Value: value, Op: op, Id: nrand()}
+	var reply PutAppendReply
+	for i := 0; ; {
+		if ok := call(ck.servers[i], "KVPaxos.PutAppend", args, &reply); ok && reply.Err == OK {
+			return
+		}
+		i++
+		i %= len(ck.servers)
+	}
 }
 
 func (ck *Clerk) Put(key string, value string) {

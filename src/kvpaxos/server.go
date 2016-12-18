@@ -12,6 +12,12 @@ import "syscall"
 import "encoding/gob"
 import "math/rand"
 
+import "time"
+
+const (
+	// wait time for being sure of the Operation
+	timeout = time.Second
+)
 
 const Debug = 0
 
@@ -22,11 +28,14 @@ func DPrintf(format string, a ...interface{}) (n int, err error) {
 	return
 }
 
-
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	OpName string
+	Key    string
+	Value  string
+	Id     int64
 }
 
 type KVPaxos struct {
@@ -38,17 +47,98 @@ type KVPaxos struct {
 	px         *paxos.Paxos
 
 	// Your definitions here.
+	content map[string]string
+	seq     int // seq for next req
+	history map[int64]bool
 }
 
+func (kv *KVPaxos) apply(op *Op) {
+	switch op.OpName {
+	case Put:
+		kv.content[op.Key] = op.Value
+	case Append:
+		kv.content[op.Key] += op.Value
+	default:
+		// nothing
+	}
+	// Inject the GET value into the history,
+	// the Write op can be recorded without value for dedup.
+	kv.history[op.Id] = true
+	return
+}
+
+// Try to decide the op in one of the paxos instance
+// increase the seq until decide the op that we want,
+// and apply the chosen value to the kv store.
+func (kv *KVPaxos) TryDecide(op Op) (Err, string) {
+	// TODO concurrency optimization
+	kv.mu.Lock()
+	defer kv.mu.Unlock()
+	if _, ok := kv.history[op.Id]; ok {
+		if op.OpName == Get {
+			return OK, kv.content[op.Key]
+		} else {
+			return OK, ""
+		}
+	}
+	chosen := false
+	for !chosen {
+		timeout := 0 * time.Millisecond
+		sleep_interval := 10 * time.Millisecond
+		kv.px.Start(kv.seq, op)
+	INNER:
+		for {
+			fate, v := kv.px.Status(kv.seq)
+			switch fate {
+			case paxos.Decided:
+				{
+					_op := v.(Op)
+					kv.px.Done(kv.seq)
+					kv.apply(&_op)
+					kv.seq++
+					if _op.Id == op.Id {
+						if _op.OpName == Get {
+							if v, ok := kv.content[op.Key]; ok {
+								return OK, v
+							} else {
+								return ErrNoKey, ""
+							}
+						}
+						// for put/append operation
+						chosen = true
+					}
+					break INNER
+				}
+			case paxos.Pending:
+				{
+					if timeout > 10*time.Second {
+						return ErrPending, ""
+					} else {
+						time.Sleep(sleep_interval)
+						timeout += sleep_interval
+						sleep_interval *= 2
+					}
+				}
+			default:
+				// Forgotten, do nothing for impossibility
+				return ErrForgotten, ""
+			}
+		}
+	}
+	return OK, ""
+}
 
 func (kv *KVPaxos) Get(args *GetArgs, reply *GetReply) error {
 	// Your code here.
+	op := Op{OpName: Get, Key: args.Key, Value: "", Id: args.Id}
+	reply.Err, reply.Value = kv.TryDecide(op)
 	return nil
 }
 
 func (kv *KVPaxos) PutAppend(args *PutAppendArgs, reply *PutAppendReply) error {
 	// Your code here.
-
+	op := Op{OpName: args.Op, Key: args.Key, Value: args.Value, Id: args.Id}
+	reply.Err, _ = kv.TryDecide(op)
 	return nil
 }
 
@@ -92,6 +182,9 @@ func StartServer(servers []string, me int) *KVPaxos {
 
 	kv := new(KVPaxos)
 	kv.me = me
+	kv.content = make(map[string]string)
+	kv.history = make(map[int64]bool)
+	kv.seq = 0
 
 	// Your initialization code here.
 
@@ -106,7 +199,6 @@ func StartServer(servers []string, me int) *KVPaxos {
 		log.Fatal("listen error: ", e)
 	}
 	kv.l = l
-
 
 	// please do not change any of the following code,
 	// or do anything to subvert it.
