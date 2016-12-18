@@ -9,14 +9,14 @@
 2. Lab 2 : Primary/Backup Key/Value Service 
   * Part-A (Done)
     * View server (zookeeper-like component)
-  * Part-B (Done)
+  * Part-B (Done) `A bug in ConcurrentSameUnreliable`
     * PRC at-most-one semantics (dedup)
     * replication from primary to backup
     * mutex of concurrency request
     * client requests of expired view
 3. Lab 3: Paxos-based Key/Value Service
   * Part-A Paxos Service (Done)
-  * Part-B: Paxos-based Key/Value Server (Undone)
+  * Part-B: Paxos-based Key/Value Server (Done)
 4. Lab 4: Sharded Key/Value Service (Undone)
 5. Lab 5: Persistence (Undone)
 
