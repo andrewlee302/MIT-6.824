@@ -14,7 +14,7 @@ package shardmaster
 // #0 is the initial configuration, with no groups and all shards
 // assigned to group 0 (the invalid group).
 //
-// A GID is a replica group ID. GIDs must be uniqe and > 0.
+// A GID is a replica group ID. GIDs must be unique and > 0.
 // Once a GID joins, and leaves, it should never join again.
 //
 // Please don't change this file.
