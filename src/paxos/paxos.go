@@ -332,6 +332,7 @@ func (proposer *Proposer) Propose() {
 				<-acceptBarrier
 			}
 
+			// Decide procedure is broadcast the learn value
 			if len(acceptReplies) >= majority_num {
 				// be sure to get a chosen value
 				for me, peer := range proposer.mgr.peers {
@@ -387,6 +388,8 @@ func (proposer *Proposer) Propose() {
 //
 func (px *Paxos) Start(seq int, v interface{}) {
 	// Your code here.
+	// TODO optimize, if we know the history log, just avoid the
+	// paxos proposing process.
 
 	// ignore the instance whose seq isn't more than minDoneSeq
 	if seq <= px.minDoneSeq {

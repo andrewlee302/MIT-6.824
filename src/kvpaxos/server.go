@@ -14,11 +14,6 @@ import "math/rand"
 
 import "time"
 
-const (
-	// wait time for being sure of the Operation
-	timeout = time.Second
-)
-
 const Debug = 0
 
 func DPrintf(format string, a ...interface{}) (n int, err error) {
@@ -182,11 +177,11 @@ func StartServer(servers []string, me int) *KVPaxos {
 
 	kv := new(KVPaxos)
 	kv.me = me
+
+	// Your initialization code here.
 	kv.content = make(map[string]string)
 	kv.history = make(map[int64]bool)
 	kv.seq = 0
-
-	// Your initialization code here.
 
 	rpcs := rpc.NewServer()
 	rpcs.Register(kv)

@@ -45,7 +45,6 @@ func MakeClerk(shardmasters []string) *Clerk {
 //
 // please use call() to send all RPCs, in client.go and server.go.
 // please don't change this function.
-//
 func call(srv string, rpcname string,
 	args interface{}, reply interface{}) bool {
 	c, errx := rpc.Dial("unix", srv)
@@ -88,8 +87,13 @@ func (ck *Clerk) Get(key string) string {
 
 	// You'll have to modify Get().
 
+	shard := key2shard(key)
+	args := &GetArgs{}
+	args.Id = nrand()
+	args.Key = key
+	var reply GetReply
+
 	for {
-		shard := key2shard(key)
 
 		gid := ck.config.Shards[shard]
 
@@ -98,9 +102,6 @@ func (ck *Clerk) Get(key string) string {
 		if ok {
 			// try each server in the shard's replication group.
 			for _, srv := range servers {
-				args := &GetArgs{}
-				args.Key = key
-				var reply GetReply
 				ok := call(srv, "ShardKV.Get", args, &reply)
 				if ok && (reply.Err == OK || reply.Err == ErrNoKey) {
 					return reply.Value
@@ -125,8 +126,15 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 
 	// You'll have to modify PutAppend().
 
+	shard := key2shard(key)
+	args := &PutAppendArgs{}
+	args.Id = nrand()
+	args.Key = key
+	args.Value = value
+	args.Op = op
+	var reply PutAppendReply
+
 	for {
-		shard := key2shard(key)
 
 		gid := ck.config.Shards[shard]
 
@@ -135,11 +143,8 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		if ok {
 			// try each server in the shard's replication group.
 			for _, srv := range servers {
-				args := &PutAppendArgs{}
-				args.Key = key
-				args.Value = value
-				args.Op = op
-				var reply PutAppendReply
+				// keep the same id for args
+				// fmt.Println("client put", srv, args)
 				ok := call(srv, "ShardKV.PutAppend", args, &reply)
 				if ok && reply.Err == OK {
 					return
@@ -158,8 +163,8 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 }
 
 func (ck *Clerk) Put(key string, value string) {
-	ck.PutAppend(key, value, "Put")
+	ck.PutAppend(key, value, OP_PUT)
 }
 func (ck *Clerk) Append(key string, value string) {
-	ck.PutAppend(key, value, "Append")
+	ck.PutAppend(key, value, OP_APPEND)
 }
